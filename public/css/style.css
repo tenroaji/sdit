@@ -1,0 +1,83 @@
+body html {
+    margin: 0;
+    padding: 0;
+}
+
+/* Hover effect for navbar links */
+.navbar-nav .nav-item .nav-link {
+    color: #343a40; /* Default text color - adjust as needed */
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #ff8c00; /* Orange color - adjust as needed */
+}
+
+/* Margin between navbar items */
+.navbar-nav .nav-item {
+    margin-right: 10px; /* Adjust the margin as needed */
+}
+
+#home {
+    position: relative;
+}
+.text-overlay {
+    position: absolute;
+    top: 80%;
+    left: 20%;
+    transform: translate(-60%, -20%);
+    text-align: center;
+    color: #151515; /* Warna teks - Sesuaikan kebutuhan */
+}
+
+.text-overlay h2 {
+    font-size: 2rem; /* Ukuran font - Sesuaikan kebutuhan */
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.text-overlay a {
+    font-size: 1.5rem; /* Ukuran font tombol - Sesuaikan kebutuhan */
+    padding: 10px 20px; /* Sesuaikan padding sesuai kebutuhan */
+    text-decoration: none; /* Menghapus garis bawah pada tautan */
+    border: 2px solid #fff; /* Warna border - Sesuaikan kebutuhan */
+    border-radius: 5px; /* Radius sudut - Sesuaikan kebutuhan */
+}
+
+.text-overlay a:hover {
+    background-color: #fff; /* Warna latar belakang saat hover - Sesuaikan kebutuhan */
+    color: #28a745; /* Warna teks saat hover - Sesuaikan kebutuhan */
+}
+
+/* bagian team */
+/* Tablet */
+@media (max-width: 767px) {
+    .text-overlay a {
+        font-size: 75%; /* Ukuran font tombol untuk layar tab - Sesuaikan kebutuhan */
+        padding: 7.5px 15px; /* Sesuaikan padding sesuai kebutuhan */
+    }
+}
+
+/* Smartphone */
+@media (max-width: 479px) {
+    .text-overlay a {
+        font-size: 50%; /* Ukuran font tombol untuk layar smartphone - Sesuaikan kebutuhan */
+        padding: 5px 10px; /* Sesuaikan padding sesuai kebutuhan */
+    }
+}
+.banner-section {
+    position: relative;
+}
+
+.banner-image {
+    width: 100%;
+    height: auto;
+}
+
+.banner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+}

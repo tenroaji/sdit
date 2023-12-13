@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Filament\Resources\JenisPembayaranResource\Pages;
+
+use App\Filament\Resources\JenisPembayaranResource;
+use Filament\Actions;
+use Filament\Resources\Pages\ListRecords;
+
+class ListJenisPembayarans extends ListRecords
+{
+    protected static string $resource = JenisPembayaranResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\CreateAction::make()
+            ->label('Buat Data Jenis Pembayaran'),
+        ];
+    }
+    public function getTitle(): string {
+        return "Daftar Jenis Pembayaran";
+    }
+}
