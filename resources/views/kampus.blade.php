@@ -26,8 +26,7 @@
                     <img src="{{ asset('images/logo alfahri.png') }}" alt="Company Logo" width="80rem"
                         class="d-inline-block align-text-top img-fluid" />
                     <div class="d-flex flex-column ms-2">
-                        <span>Pesantren Multi Dimensi</span>
-                        <span class="fw-bold">Alfakhriyah Makassar</span>
+                         <span>SDIT DARUL MA'ARIF</span>
                     </div>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
