@@ -11,6 +11,7 @@ use App\Models\OrangtuaSantri;
 use App\Models\RiwayatSekolahSantri;
 use App\Models\RiwayatPrestasiSantri;
 use App\Models\RiwayatKesehatanSantri;
+use App\Models\SantriGaleri;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -35,6 +36,9 @@ class Santri extends Model
         'tahun'
     ];
 
+    public function santrigaleri(){
+        return $this->hasMany(SantriGaleri::class,'santri_id');
+    }
     public function kota(){
         return $this->belongsTo(Kota::class,'kota_id');
     }
