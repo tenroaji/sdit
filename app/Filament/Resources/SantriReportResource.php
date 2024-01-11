@@ -37,6 +37,8 @@ class SantriReportResource extends Resource
     protected static ?string $model = SantriReport::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $modelLabel = 'Ikhwal Santri';
+    protected static ?string $navigationLabel = 'Ikhwal Santri';
 
     public static function form(Form $form): Form
     {
@@ -123,7 +125,7 @@ class SantriReportResource extends Resource
             ->actions([
                 // Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make()
-                ->label('Lihat Laporan'),
+                ->label('Lihat Ikhwal Santri'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -177,7 +179,33 @@ class SantriReportResource extends Resource
                         ])->from('lg'),
 
                     ]),
-                    Section::make('Hasil Ujian dan Penilaian')
+                    Section::make('Dana Wakaf Bulanan (DWB)')
+                    ->collapsible()
+                    ->collapsed()
+                    ->schema([
+                        RepeatableEntry::make('pembayaran')
+                            ->schema([
+                                Infolists\Components\TextEntry::make('updated_at')
+                                ->date()
+                                ->label('Tanggal'),
+                                Infolists\Components\TextEntry::make('bulan')
+                                ->label('Bulan'),
+                                Infolists\Components\TextEntry::make('tahun')
+                                ->label('Tahun'),
+                                Infolists\Components\IconEntry::make('status_bayar')
+                                ->label('Status Lunas')
+                                ->boolean(),
+                                Infolists\Components\TextEntry::make('metode_bayar')
+                                ->label('Cara'),
+                                Infolists\Components\TextEntry::make('nilai_bayar')
+                                ->label('Jumlah')
+                                ->money('idr'),
+                                Infolists\Components\TextEntry::make('sisa_bayar')
+                                ->label('Sisa'),
+                            ])->columns(7),
+                    ]),
+
+                    Section::make('Raport (Nilai Akademik)')
                     ->collapsible()
                     ->collapsed()
                     ->schema([
@@ -243,37 +271,12 @@ class SantriReportResource extends Resource
                                 ->label('Guru Pembimbing'),
                             ])->columns(6),
                     ]),
-                    Section::make('Catatan pembayaran Bulanan')
-                    ->collapsible()
-                    ->collapsed()
-                    ->schema([
-                        RepeatableEntry::make('pembayaran')
-                            ->schema([
-                                Infolists\Components\TextEntry::make('updated_at')
-                                ->date()
-                                ->label('Tanggal'),
-                                Infolists\Components\TextEntry::make('bulan')
-                                ->label('Pembayar Bulan'),
-                                Infolists\Components\TextEntry::make('tahun')
-                                ->label('Tahun'),
-                                Infolists\Components\IconEntry::make('status_bayar')
-                                ->label('Status Lunas')
-                                ->boolean(),
-                                Infolists\Components\TextEntry::make('metode_bayar')
-                                ->label('Cara'),
-                                Infolists\Components\TextEntry::make('nilai_bayar')
-                                ->label('Jumlah')
-                                ->money('idr'),
-                                Infolists\Components\TextEntry::make('sisa_bayar')
-                                ->label('Sisa'),
-                            ])->columns(7),
-                    ]),
 
-                Section::make('Kedisiplinan')
+                Section::make('Kedisiplinan (Reward and Punishment)')
                 ->collapsible()
                 ->collapsed()
                     ->schema([
-                        Grid::make(3)
+                        Grid::make(2)
                         ->schema([
                         // RepeatableEntry::make('absensi')
                         //     ->schema([
@@ -293,19 +296,19 @@ class SantriReportResource extends Resource
                             
                             return $jumlahAbsen;
                         }),
-                        Infolists\Components\TextEntry::make('jumlahabsenasrama')
-                        ->label('Jumlah Tidak hadir di Asrama :')
-                        ->suffix(' kali absensi Asrama')
-                        ->default(function ($record) {
-                            // Hitung jumlah ketidak hadiran dari model Absensi
-                            $jumlahAbsen = AbsensiAsramaSantri::where('santri_id', $record->id)
-                                ->where('status_hadir', 0)
-                                ->count();
+                        // Infolists\Components\TextEntry::make('jumlahabsenasrama')
+                        // ->label('Jumlah Tidak hadir di Asrama :')
+                        // ->suffix(' kali absensi Asrama')
+                        // ->default(function ($record) {
+                        //     // Hitung jumlah ketidak hadiran dari model Absensi
+                        //     $jumlahAbsen = AbsensiAsramaSantri::where('santri_id', $record->id)
+                        //         ->where('status_hadir', 0)
+                        //         ->count();
                             
-                            return $jumlahAbsen;
-                        }),
+                        //     return $jumlahAbsen;
+                        // }),
                         Infolists\Components\TextEntry::make('jumlahpelanggaran')
-                        ->label('Jumlah Pelanggaran kedisiplinan :')
+                        ->label('kedisiplinan :')
                         ->suffix(' kali melanggar')
                         ->default(function ($record) {
                             // Hitung jumlah ketidak hadiran dari model Absensi
