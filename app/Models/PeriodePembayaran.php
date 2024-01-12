@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Strata;
+use App\Models\RefTahunAjaran;
 use App\Models\Tingkat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,9 @@ class PeriodePembayaran extends Model
         'bulan','tahun','tingkat_id','strata_id','jumlah_bayar'
     ];
 
+    public function tahun(){
+        return $this->belongsTo(RefTahunAjaran::class,'tahun','nama');
+    }
     public function pembayarans(){
         return $this->hasMany(Pembayaran::class,'periodepembayaran_id');
     }

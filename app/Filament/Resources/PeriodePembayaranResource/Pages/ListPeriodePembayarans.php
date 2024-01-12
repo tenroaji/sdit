@@ -14,10 +14,10 @@ class ListPeriodePembayarans extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-            ->label('Buat Periode Pembayaran Baru'),
+            ->label('Buat Wakaf Bulanan Baru'),
         ];
     }
     public function getTitle(): string {
-        return "Daftar Periode Pembayaran";
+        return "Daftar Wakaf Bulanan";
     }
 }

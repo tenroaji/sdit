@@ -23,8 +23,8 @@ class PeriodePembayaranResource extends Resource
     protected static ?string $model = PeriodePembayaran::class;
 
     protected static ?string $navigationIcon = 'heroicon-s-banknotes';
-    protected static ?string $modelLabel = 'Periode Pembayaran';
-    protected static ?string $navigationLabel = 'Periode Pembayaran Bulanan';
+    protected static ?string $modelLabel = 'Dana Wakaf';
+    protected static ?string $navigationLabel = 'Dana Wakaf Bulanan (DWB)';
     protected static ?string $navigationGroup = 'Keuangan Akademik';
     protected static ?int $navigationSort = 1;
 
@@ -35,9 +35,14 @@ class PeriodePembayaranResource extends Resource
                 Forms\Components\TextInput::make('bulan')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('tahun')
-                    ->required()
-                    ->maxLength(255),
+                // Forms\Components\TextInput::make('tahun')
+                //     ->required()
+                //     ->maxLength(255),
+                Forms\Components\Select::make('tahun')
+                    // ->required()
+                    ->preload()
+                    ->searchable()
+                    ->relationship('tahun', 'nama'),
                 Forms\Components\Select::make('tingkat_id')
                     // ->required()
                     ->preload()
@@ -57,9 +62,9 @@ class PeriodePembayaranResource extends Resource
                 // JS))
                 ->prefix('Rp')
                     ,
-                                   
 
-                    
+
+
             ]);
     }
 
@@ -74,9 +79,9 @@ class PeriodePembayaranResource extends Resource
                 Tables\Columns\TextColumn::make('tingkat.nama')
                     ->label('Kelas')
                     ->searchable(),
-                 Tables\Columns\TextColumn::make('strata.nama')
-                    ->label('Jenjang')
-                    ->searchable(),    
+                //  Tables\Columns\TextColumn::make('strata.nama')
+                //     ->label('Jenjang')
+                //     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
