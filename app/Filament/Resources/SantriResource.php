@@ -69,7 +69,7 @@ class SantriResource extends Resource
                     ->label('Jenjang Sekolah')
                 ->relationship('strata','nama')
                 ->preload()
-                ->searchable(),    
+                ->searchable(),
                 TextInput::make('alamat'),
                 Select::make('kota_id')
                 ->relationship('kota','nama')
@@ -96,13 +96,14 @@ class SantriResource extends Resource
 
 
             ])
-              
+
                 ;
     }
 
     public static function table(Table $table): Table
     {
         return $table
+         ->queryStringIdentifier('users')
             ->columns([
                 TextColumn::make('nis')
                 ->searchable() ->sortable(),
@@ -123,7 +124,7 @@ class SantriResource extends Resource
             ])
             ->defaultSort('id', 'desc')
             ->filters([
-     
+
                ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -139,11 +140,11 @@ class SantriResource extends Resource
                 //     }, $hasilcetak);
                 //  }),
 
-                
-                 
-                
-           
-                 
+
+
+
+
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
