@@ -17,6 +17,6 @@ class ListJenisPelanggarans extends ListRecords
         ];
     }
     public function getTitle(): string {
-        return "Jenis Pelanggaran";
+        return "Jenis Reward/Punishment";
     }
 }

@@ -84,8 +84,18 @@ class SantriReport extends Model
     public function pembayaran(){
         return $this->hasMany(Pembayaran::class,'santri_id');
     }
-    public function pelanggaransantri(){
-        return $this->hasMany(Pelanggaran::class,'santri_id');
+
+    public function rewardSantri(){
+        return $this->hasMany(Pelanggaran::class,'santri_id')->whereHas('jenispelanggaran', function ($query) {
+            $query->where('jenis_pelanggarans.tipe', "Reward"); // Ganti dengan nama jenis pelanggaran yang diinginkan
+        });
     }
-   
+    public function punishmentSantri(){
+        return $this->hasMany(Pelanggaran::class,'santri_id')->whereHas('jenispelanggaran', function ($query) {
+            $query->where('jenis_pelanggarans.tipe', "Punishment"); // Ganti dengan nama jenis pelanggaran yang diinginkan
+        });
+    }
+
+
+
 }

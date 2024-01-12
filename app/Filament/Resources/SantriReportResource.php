@@ -279,13 +279,7 @@ class SantriReportResource extends Resource
                     ->schema([
                         Grid::make(2)
                         ->schema([
-                        // RepeatableEntry::make('absensi')
-                        //     ->schema([
-                        //         Infolists\Components\TextEntry::make('masterabsensi_id'),
-                        //         Infolists\Components\TextEntry::make('updated_at'),
-                        //         Infolists\Components\TextEntry::make('status_hadir'),
 
-                        //     ]),
                         Infolists\Components\TextEntry::make('jumlahabsen')
                         ->label('Jumlah Tidak Hadir di Kelas :')
                         ->suffix(' kali absensi jam pelajaran')
@@ -297,34 +291,36 @@ class SantriReportResource extends Resource
 
                             return $jumlahAbsen;
                         }),
-                        // Infolists\Components\TextEntry::make('jumlahabsenasrama')
-                        // ->label('Jumlah Tidak hadir di Asrama :')
-                        // ->suffix(' kali absensi Asrama')
+
+
+
+                        // Infolists\Components\TextEntry::make('jumlahpelanggaran')
+                        // ->label('kedisiplinan :')
+                        // ->suffix(' kali melanggar')
                         // ->default(function ($record) {
                         //     // Hitung jumlah ketidak hadiran dari model Absensi
-                        //     $jumlahAbsen = AbsensiAsramaSantri::where('santri_id', $record->id)
-                        //         ->where('status_hadir', 0)
+                        //     $jumlahAbsen = Pelanggaran::where('santri_id', $record->id)
+                        //         // ->where('status_hadir', 0)
                         //         ->count();
 
                         //     return $jumlahAbsen;
                         // }),
-                        Infolists\Components\TextEntry::make('jumlahpelanggaran')
-                        ->label('kedisiplinan :')
-                        ->suffix(' kali melanggar')
-                        ->default(function ($record) {
-                            // Hitung jumlah ketidak hadiran dari model Absensi
-                            $jumlahAbsen = Pelanggaran::where('santri_id', $record->id)
-                                // ->where('status_hadir', 0)
-                                ->count();
 
-                            return $jumlahAbsen;
-                        }),
 
-                        RepeatableEntry::make('pelanggaransantri')
+
+                        RepeatableEntry::make('rewardsantri')
+                        ->label('Reward ')
                         ->schema([
-                            Infolists\Components\TextEntry::make('jenispelanggaran.nama')->label('Jenis Pelanggaran Kedisiplinan'),
+                            Infolists\Components\TextEntry::make('jenispelanggaran.nama')->label('Jenis Reward'),
+                            Infolists\Components\TextEntry::make('hukuman')->label('Reward'),
+                        ])->columns(3)->columnSpanFull(),
+
+                        RepeatableEntry::make('punishmentsantri')
+                        ->label('Punishment ')
+                        ->schema([
+                            Infolists\Components\TextEntry::make('jenispelanggaran.nama')->label('Jenis Punishment'),
                             Infolists\Components\TextEntry::make('hukuman')->label('Punishment'),
-                        ])->columns(3)->columnSpanFull(), 
+                        ])->columns(3)->columnSpanFull(),
 
                     ]),
 

@@ -17,6 +17,6 @@ class ListPembayaranBiayaPendaftarans extends ListRecords
         ];
     }
     public function getTitle(): string {
-        return "Pembayaran Pendaftaran Santri Baru";
+        return "Administrasi Pendaftaran Santri Baru";
     }
 }

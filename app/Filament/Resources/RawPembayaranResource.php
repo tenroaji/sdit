@@ -23,7 +23,7 @@ class RawPembayaranResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-s-banknotes';
     protected static ?string $modelLabel = 'Pembayaran';
-    protected static ?string $navigationLabel = 'Daftar Tunggakan';
+    protected static ?string $navigationLabel = 'Daftar Tunggakan DWB';
     protected static ?string $navigationGroup = 'Keuangan Akademik';
     protected static ?int $navigationSort = 2;
 
@@ -42,14 +42,14 @@ class RawPembayaranResource extends Resource
             $query->unpaid();
         })
         ->defaultGroup('periode.tahun')
-        
+
             ->columns([
             Tables\Columns\ToggleColumn::make('status_bayar')
                 ->label('Status Bayar'),
             Tables\Columns\TextColumn::make('periode.bulan')
                 ->label('Bulan'),
             Tables\Columns\TextColumn::make('periode.tahun')
-                ->label('Tahun'),           
+                ->label('Tahun'),
             Tables\Columns\TextColumn::make('santri.nis')
                 ->label('NIS')
                 ->sortable()
@@ -68,7 +68,7 @@ class RawPembayaranResource extends Resource
                 ->searchable(),
             Tables\Columns\TextColumn::make('nilai_bayar')
                 ->label('Pembayaran')->money('idr')
-                ->summarize(Sum::make()->money('IDR')),            
+                ->summarize(Sum::make()->money('IDR')),
             ])
             ->filters([
                 //
@@ -83,7 +83,7 @@ class RawPembayaranResource extends Resource
 
                         // Menghasilkan nama file PDF yang unik
                         $filename = 'semua_pembayaran_' . now()->format('YmdHis') . '.pdf';
-                
+
                         return response()->streamDownload(function () use ($records) {
                             // Menggunakan Blade untuk merender tampilan
                             echo Pdf::loadHtml(
@@ -105,14 +105,14 @@ class RawPembayaranResource extends Resource
                // Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -120,5 +120,5 @@ class RawPembayaranResource extends Resource
           //  'create' => Pages\CreateRawPembayaran::route('/create'),
            // 'edit' => Pages\EditRawPembayaran::route('/{record}/edit'),
         ];
-    }    
+    }
 }

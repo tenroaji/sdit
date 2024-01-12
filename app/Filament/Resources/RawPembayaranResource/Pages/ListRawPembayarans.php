@@ -18,6 +18,6 @@ class ListRawPembayarans extends ListRecords
     }
 
     public function getTitle(): string {
-        return "Daftar Tunggakan Pembayaran";
+        return "Daftar Tunggakan Pembayaran DWB";
     }
 }

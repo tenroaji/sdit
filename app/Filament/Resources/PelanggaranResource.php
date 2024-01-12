@@ -19,8 +19,8 @@ class PelanggaranResource extends Resource
     protected static ?string $model = Pelanggaran::class;
 
     protected static ?string $navigationIcon = 'heroicon-s-chat-bubble-left-ellipsis';
-    protected static ?string $modelLabel = 'Pelanggaran Kedisiplinan';
-    protected static ?string $navigationLabel = 'Pelanggaran Kedisiplinan';
+    protected static ?string $modelLabel = 'Reward / Punishment';
+    protected static ?string $navigationLabel = 'Reward / Punishment';
     protected static ?string $navigationGroup = 'Kegiatan Sekolah';
     protected static ?int $navigationSort = 4;
 
@@ -32,7 +32,7 @@ class PelanggaranResource extends Resource
                     ->preload()
                     ->searchable()
                     ->relationship('jenispelanggaran','nama')
-                    ->label('Jenis Pelanggaran'),
+                    ->label('Jenis Reward/Punishment'),
                 Forms\Components\DatePicker::make('tanggal')
                 ,
                 Forms\Components\Select::make('santri_id')
@@ -55,7 +55,7 @@ class PelanggaranResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('jenispelanggaran.nama')
-                    ->label('Jenis Pelanggaran')
+                    ->label('Jenis Reward/Punishment')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tanggal')
@@ -94,14 +94,14 @@ class PelanggaranResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -109,5 +109,5 @@ class PelanggaranResource extends Resource
             'create' => Pages\CreatePelanggaran::route('/create'),
             'edit' => Pages\EditPelanggaran::route('/{record}/edit'),
         ];
-    }    
+    }
 }

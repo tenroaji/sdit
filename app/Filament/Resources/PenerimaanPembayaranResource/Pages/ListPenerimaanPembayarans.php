@@ -19,6 +19,6 @@ class ListPenerimaanPembayarans extends ListRecords
         ];
     }
     public function getTitle(): string {
-        return "Daftar Penerimaan Pembayaran";
+        return "Daftar Penerimaan DWB";
     }
 }

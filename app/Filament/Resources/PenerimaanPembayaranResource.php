@@ -25,7 +25,7 @@ class PenerimaanPembayaranResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-s-document-check';
     protected static ?string $modelLabel = 'Pembayaran';
-    protected static ?string $navigationLabel = 'Daftar Pembayaran Bulanan';
+    protected static ?string $navigationLabel = 'Daftar Pembayaran DWB';
     protected static ?string $navigationGroup = 'Keuangan Akademik';
     protected static ?int $navigationSort = 3;
 
@@ -106,13 +106,13 @@ class PenerimaanPembayaranResource extends Resource
                 ->label('Cetak Kuitansi')
                 ->color('success')
                 ->action(function (Model $record) {
-                    
+
                         return response()->streamDownload(function () use ($record) {
                             echo Pdf::loadHtml(
                                 Blade::render('coba', ['record' => $record])
                             )->stream();
                         }, $record->id . 'test.pdf');
-                    
+
                     // Load view dan buat PDF
                     // $pdf = app('dompdf.wrapper');
                     // $pdf->loadHTML(view('daftarpembayaran', ['record' => $record])->render());
@@ -131,7 +131,7 @@ class PenerimaanPembayaranResource extends Resource
 
                         // Menghasilkan nama file PDF yang unik
                         $filename = 'semua_pembayaran_' . now()->format('YmdHis') . '.pdf';
-                
+
                         return response()->streamDownload(function () use ($records) {
                             // Menggunakan Blade untuk merender tampilan
                             echo Pdf::loadHtml(

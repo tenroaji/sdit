@@ -19,8 +19,8 @@ class PembayaranBiayaPendaftaranResource extends Resource
     protected static ?string $model = PembayaranBiayaPendaftaran::class;
 
     protected static ?string $navigationIcon = 'heroicon-s-banknotes';
-    protected static ?string $modelLabel = 'Pembayaran Pendaftaran';
-    protected static ?string $navigationLabel = 'Daftar Pembayaran Pendaftaran';
+    protected static ?string $modelLabel = 'Administrasi Pendaftaran';
+    protected static ?string $navigationLabel = 'Administrasi Pendaftaran';
     protected static ?string $navigationGroup = 'Keuangan Akademik';
     protected static ?int $navigationSort = 4;
     public static function form(Form $form): Form
@@ -86,7 +86,7 @@ class PembayaranBiayaPendaftaranResource extends Resource
                     ->boolean(),
                     Tables\Columns\TextColumn::make('periode.biaya')
                     ->label('Biaya Pendaftaran')
-                    ->money('idr'),      
+                    ->money('idr'),
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('alamat')
@@ -123,14 +123,14 @@ class PembayaranBiayaPendaftaranResource extends Resource
                 // Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -138,5 +138,5 @@ class PembayaranBiayaPendaftaranResource extends Resource
             // 'create' => Pages\CreatePembayaranBiayaPendaftaran::route('/create'),
             // 'edit' => Pages\EditPembayaranBiayaPendaftaran::route('/{record}/edit'),
         ];
-    }    
+    }
 }

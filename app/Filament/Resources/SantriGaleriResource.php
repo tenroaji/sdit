@@ -6,6 +6,7 @@ use App\Filament\Resources\SantriGaleriResource\Pages;
 use App\Filament\Resources\SantriGaleriResource\RelationManagers;
 use App\Models\SantriGaleri;
 use Filament\Forms;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -51,12 +52,14 @@ class SantriGaleriResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('santri_id')
+                Tables\Columns\TextColumn::make('santri.nama')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('media')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('kelas_id')
+            //   ImageColumn::make('media')
+            //     ,
+                // Tables\Columns\TextColumn::make('media')
+                //     ->searchable(),
+                Tables\Columns\TextColumn::make('kelas.nama')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user_id')
