@@ -23,6 +23,7 @@ class AbsensiAsramaResource extends Resource
     protected static ?string $navigationLabel = 'Absensi Asrama Santri';
     protected static ?string $navigationGroup = 'Manajemen Asrama';
     protected static ?int $navigationSort = 2;
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -39,13 +40,13 @@ class AbsensiAsramaResource extends Resource
                     ->label('Kamar')
                     ->required()
                     ->relationship('kamarasrama','nama')
-                    ->searchable(),    
+                    ->searchable(),
                 Forms\Components\DatePicker::make('tanggal')
                     ->required(),
                 Forms\Components\TextInput::make('tahun')
                     ->label('Tahun Masuk Asrama')
                     ->required()
-                    ->maxWidth(4),    
+                    ->maxWidth(4),
                 Forms\Components\Select::make('user_id')
                 ->disabled()
                 ->label('Diinput Oleh')
@@ -63,7 +64,7 @@ class AbsensiAsramaResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kamarasrama.nama')
                     ->searchable()
-                    ->sortable(),    
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('tanggal')
                     ->date()
                     ->sortable(),
@@ -93,14 +94,14 @@ class AbsensiAsramaResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             KehadiranRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -108,5 +109,5 @@ class AbsensiAsramaResource extends Resource
             'create' => Pages\CreateAbsensiAsrama::route('/create'),
             'edit' => Pages\EditAbsensiAsrama::route('/{record}/edit'),
         ];
-    }    
+    }
 }

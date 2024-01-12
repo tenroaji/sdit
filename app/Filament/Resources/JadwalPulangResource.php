@@ -23,6 +23,7 @@ class JadwalPulangResource extends Resource
     protected static ?string $navigationLabel = 'Jadwal Pulang Santri';
     protected static ?string $navigationGroup = 'Manajemen Asrama';
     protected static ?int $navigationSort = 3;
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -41,7 +42,7 @@ class JadwalPulangResource extends Resource
                     ->preload()
                     ->searchable()
                     ->relationship('asrama','nama')
-                    ->label('Asrama'),    
+                    ->label('Asrama'),
                 Forms\Components\Select::make('user_id')
                     ->preload()
                     ->disabled()
@@ -58,7 +59,7 @@ class JadwalPulangResource extends Resource
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('asrama.nama')
-                    ->searchable(),    
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('jenis_libur')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
@@ -88,14 +89,14 @@ class JadwalPulangResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             SantrisRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -103,5 +104,5 @@ class JadwalPulangResource extends Resource
             'create' => Pages\CreateJadwalPulang::route('/create'),
             'edit' => Pages\EditJadwalPulang::route('/{record}/edit'),
         ];
-    }    
+    }
 }

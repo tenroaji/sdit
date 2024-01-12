@@ -23,6 +23,7 @@ class PengaturanAsramaResource extends Resource
     protected static ?string $navigationLabel = 'Penentuan Asrama Santri';
     protected static ?string $navigationGroup = 'Manajemen Asrama';
     protected static ?int $navigationSort = 1;
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -86,14 +87,14 @@ class PengaturanAsramaResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             SantrisRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -101,5 +102,5 @@ class PengaturanAsramaResource extends Resource
             'create' => Pages\CreatePengaturanAsrama::route('/create'),
             'edit' => Pages\EditPengaturanAsrama::route('/{record}/edit'),
         ];
-    }    
+    }
 }

@@ -23,6 +23,7 @@ class AsramaResource extends Resource
     protected static ?string $navigationLabel = 'Asrama dan Kamar';
     protected static ?string $navigationGroup = 'Data Referensi Sekolah';
     protected static ?int $navigationSort = 1;
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -42,7 +43,7 @@ class AsramaResource extends Resource
                 ->disk('public_images')
                 ->preserveFilenames()
                     ,
-               
+
             ]);
     }
 
@@ -85,14 +86,14 @@ class AsramaResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             KamarRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -100,5 +101,5 @@ class AsramaResource extends Resource
             'create' => Pages\CreateAsrama::route('/create'),
             'edit' => Pages\EditAsrama::route('/{record}/edit'),
         ];
-    }    
+    }
 }
