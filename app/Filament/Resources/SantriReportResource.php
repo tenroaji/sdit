@@ -38,6 +38,7 @@ class SantriReportResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $modelLabel = 'Ikhwal Santri';
+    protected static ?string $pluralModelLabel = 'Ikhwal Santri';
     protected static ?string $navigationLabel = 'Ikhwal Santri';
 
     public static function form(Form $form): Form
@@ -293,7 +294,7 @@ class SantriReportResource extends Resource
                             $jumlahAbsen = Absensi::where('santri_id', $record->id)
                                 ->where('status_hadir', 0)
                                 ->count();
-                            
+
                             return $jumlahAbsen;
                         }),
                         // Infolists\Components\TextEntry::make('jumlahabsenasrama')
@@ -304,7 +305,7 @@ class SantriReportResource extends Resource
                         //     $jumlahAbsen = AbsensiAsramaSantri::where('santri_id', $record->id)
                         //         ->where('status_hadir', 0)
                         //         ->count();
-                            
+
                         //     return $jumlahAbsen;
                         // }),
                         Infolists\Components\TextEntry::make('jumlahpelanggaran')
@@ -315,7 +316,7 @@ class SantriReportResource extends Resource
                             $jumlahAbsen = Pelanggaran::where('santri_id', $record->id)
                                 // ->where('status_hadir', 0)
                                 ->count();
-                            
+
                             return $jumlahAbsen;
                         }),
                     ]),
