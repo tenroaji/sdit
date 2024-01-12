@@ -319,6 +319,13 @@ class SantriReportResource extends Resource
 
                             return $jumlahAbsen;
                         }),
+
+                        RepeatableEntry::make('pelanggaransantri')
+                        ->schema([
+                            Infolists\Components\TextEntry::make('jenispelanggaran.nama')->label('Jenis Pelanggaran Kedisiplinan'),
+                            Infolists\Components\TextEntry::make('hukuman')->label('Punishment'),
+                        ])->columns(3)->columnSpanFull(), 
+
                     ]),
 
                     ]),
