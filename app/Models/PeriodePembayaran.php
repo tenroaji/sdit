@@ -15,7 +15,7 @@ class PeriodePembayaran extends Model
         'bulan','tahun','tingkat_id','strata_id','jumlah_bayar'
     ];
 
-    public function tahun(){
+    public function tahuns(){
         return $this->belongsTo(RefTahunAjaran::class,'tahun','nama');
     }
     public function pembayarans(){

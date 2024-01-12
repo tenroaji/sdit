@@ -42,7 +42,7 @@ class PeriodePembayaranResource extends Resource
                     // ->required()
                     ->preload()
                     ->searchable()
-                    ->relationship('tahun', 'nama'),
+                    ->relationship('tahuns', 'nama'),
                 Forms\Components\Select::make('tingkat_id')
                     // ->required()
                     ->preload()
