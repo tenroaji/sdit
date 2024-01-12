@@ -23,18 +23,26 @@ class SantriGaleriResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('santri_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('santri_id')
+                ->relationship('santri','nama')
+                ->preload()
+                ->label('Nama Santri')
+                ->searchable(),
                 Forms\Components\FileUpload::make('media')
                     ,
                 Forms\Components\Textarea::make('deskripsi')
                     ->maxLength(65535)
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('kelas_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('user_id')
-                    ->numeric(),
+                    Forms\Components\Select::make('kelas_id')
+                    ->relationship('kelas','nama')
+                    ->preload()
+                    ->label('Nama Kelas')
+                    ->searchable(),
+                Forms\Components\Select::make('user_id')
+                ->relationship('user','name')
+                ->label('Diinput Oleh')
+                ->default(Auth()->id())
+                ->disabled(),
                 Forms\Components\DatePicker::make('tanggal'),
             ]);
     }
