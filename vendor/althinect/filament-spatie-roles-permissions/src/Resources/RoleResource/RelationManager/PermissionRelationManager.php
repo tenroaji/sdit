@@ -2,18 +2,16 @@
 
 namespace Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource\RelationManager;
 
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Tables\Actions\BulkActionGroup;
-use Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Actions\DetachAction;
-use Spatie\Permission\PermissionRegistrar;
 use Filament\Tables\Actions\DetachBulkAction;
-use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\PermissionRegistrar;
 
 class PermissionRelationManager extends RelationManager
 {
@@ -26,7 +24,7 @@ class PermissionRelationManager extends RelationManager
      */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('filament-spatie-roles-permissions::filament-spatie.section.permissions') ?? (string)str(static::getRelationshipName())
+        return __('filament-spatie-roles-permissions::filament-spatie.section.permissions') ?? (string) str(static::getRelationshipName())
             ->kebab()
             ->replace('-', ' ')
             ->headline();
@@ -70,14 +68,13 @@ class PermissionRelationManager extends RelationManager
             ->filters([
 
             ])->headerActions([
-                AttachAction::make('Attach Permission')->preloadRecordSelect()->after(fn() => app()
+                AttachAction::make('Attach Permission')->preloadRecordSelect()->after(fn () => app()
                     ->make(PermissionRegistrar::class)
                     ->forgetCachedPermissions()),
             ])->actions([
-                DetachAction::make()->after(fn() => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
+                DetachAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
             ])->bulkActions([
-                DetachBulkAction::make()->after(fn() => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
-               
+                DetachBulkAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
             ]);
     }
 }

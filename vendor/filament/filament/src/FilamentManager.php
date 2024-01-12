@@ -5,6 +5,7 @@ namespace Filament;
 use Closure;
 use Exception;
 use Filament\Contracts\Plugin;
+use Filament\Enums\ThemeMode;
 use Filament\Events\ServingFilament;
 use Filament\Events\TenantSet;
 use Filament\Exceptions\NoDefaultPanelSetException;
@@ -17,6 +18,7 @@ use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Support\Assets\Theme;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
 use Filament\Widgets\Widget;
@@ -79,9 +81,19 @@ class FilamentManager
         return $this->getCurrentPanel()->getAuthPasswordBroker();
     }
 
-    public function getBrandName(): string
+    public function getBrandName(): string | Htmlable
     {
         return $this->getCurrentPanel()->getBrandName();
+    }
+
+    public function getBrandLogo(): string | Htmlable | null
+    {
+        return $this->getCurrentPanel()->getBrandLogo();
+    }
+
+    public function getBrandLogoHeight(): ?string
+    {
+        return $this->getCurrentPanel()->getBrandLogoHeight();
     }
 
     public function getCollapsedSidebarWidth(): string
@@ -92,6 +104,11 @@ class FilamentManager
     public function getCurrentPanel(): ?Panel
     {
         return $this->currentPanel ?? null;
+    }
+
+    public function getDarkModeBrandLogo(): string | Htmlable | null
+    {
+        return $this->getCurrentPanel()->getDarkModeBrandLogo();
     }
 
     public function getDatabaseNotificationsPollingInterval(): ?string
@@ -188,7 +205,7 @@ class FilamentManager
         return $this->getCurrentPanel()->getLogoutUrl($parameters);
     }
 
-    public function getMaxContentWidth(): ?string
+    public function getMaxContentWidth(): MaxWidth | string | null
     {
         return $this->getCurrentPanel()->getMaxContentWidth();
     }
@@ -229,6 +246,14 @@ class FilamentManager
     public function getNavigationItems(): array
     {
         return $this->getCurrentPanel()->getNavigationItems();
+    }
+
+    /**
+     * @return array<string | int, array<class-string> | class-string>
+     */
+    public function getClusteredComponents(?string $cluster): array
+    {
+        return $this->getCurrentPanel()->getClusteredComponents($cluster);
     }
 
     /**
@@ -545,6 +570,11 @@ class FilamentManager
         return $this->getCurrentPanel()->hasRegistration();
     }
 
+    public function hasTenantMenu(): bool
+    {
+        return $this->getCurrentPanel()->hasTenantMenu();
+    }
+
     public function hasTenancy(): bool
     {
         return $this->getCurrentPanel()->hasTenancy();
@@ -563,6 +593,11 @@ class FilamentManager
     public function hasTenantRegistration(): bool
     {
         return $this->getCurrentPanel()->hasTenantRegistration();
+    }
+
+    public function hasTopbar(): bool
+    {
+        return $this->getCurrentPanel()->hasTopbar();
     }
 
     public function hasTopNavigation(): bool
@@ -609,6 +644,8 @@ class FilamentManager
     {
         $this->panels[$panel->getId()] = $panel;
 
+        $panel->register();
+
         if ($panel->isDefault()) {
             $this->setCurrentPanel($panel);
         }
@@ -637,11 +674,11 @@ class FilamentManager
         $this->isServing = $condition;
     }
 
-    public function setTenant(?Model $tenant): void
+    public function setTenant(?Model $tenant, bool $isQuiet = false): void
     {
         $this->tenant = $tenant;
 
-        if ($tenant) {
+        if ($tenant && (! $isQuiet)) {
             event(new TenantSet($tenant, $this->auth()->user()));
         }
     }
@@ -792,5 +829,10 @@ class FilamentManager
         } catch (NoDefaultPanelSetException $exception) {
             throw new Exception('Please use the `widgets()` method on the panel configuration to register widgets.');
         }
+    }
+
+    public function getDefaultThemeMode(): ThemeMode
+    {
+        return $this->getCurrentPanel()->getDefaultThemeMode();
     }
 }

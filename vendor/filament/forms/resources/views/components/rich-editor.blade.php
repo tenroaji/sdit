@@ -1,31 +1,36 @@
-<x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
-    @php
-        $id = $getId();
-        $statePath = $getStatePath();
-    @endphp
+@php
+    use Filament\Support\Facades\FilamentView;
 
+    $id = $getId();
+    $statePath = $getStatePath();
+@endphp
+
+<x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
     @if ($isDisabled())
         <div
+            x-data="{
+                state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
+            }"
             x-html="state"
-            class="prose block w-full max-w-none rounded-lg bg-gray-50 px-3 py-3 text-gray-500 shadow-sm ring-1 ring-gray-950/10 dark:prose-invert dark:bg-transparent dark:text-gray-400 dark:ring-white/10 sm:text-sm"
+            class="fi-fo-rich-editor fi-disabled prose block w-full max-w-none rounded-lg bg-gray-50 px-3 py-3 text-gray-500 shadow-sm ring-1 ring-gray-950/10 dark:prose-invert sm:text-sm dark:bg-transparent dark:text-gray-400 dark:ring-white/10"
         ></div>
     @else
-        <div
-            {{
-                $attributes
-                    ->merge($getExtraAttributes(), escape: false)
-                    ->class([
-                        'fi-fo-rich-editor max-w-full overflow-x-auto rounded-lg bg-white shadow-sm ring-1 transition duration-75 focus-within:ring-2 dark:bg-white/5',
-                        'ring-gray-950/10 focus-within:ring-primary-600 dark:ring-white/20 dark:focus-within:ring-primary-500' => ! $errors->has($statePath),
-                        'ring-danger-600 focus-within:ring-danger-600 dark:ring-danger-500 dark:focus-within:ring-danger-500' => $errors->has($statePath),
-                    ])
-            }}
+        <x-filament::input.wrapper
+            :valid="! $errors->has($statePath)"
+            :attributes="
+                \Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())
+                    ->class(['fi-fo-rich-editor max-w-full overflow-x-auto'])
+            "
         >
             <div
-                ax-load
+                @if (FilamentView::hasSpaMode())
+                    ax-load="visible"
+                @else
+                    ax-load
+                @endif
                 ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('rich-editor', 'filament/forms') }}"
                 x-data="richEditorFormComponent({
-                            state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')", isOptimisticallyLive: false) }},
+                            state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')", isOptimisticallyLive: false) }},
                         })"
                 x-ignore
                 x-on:trix-attachment-add="
@@ -62,7 +67,7 @@
                 <trix-toolbar
                     id="trix-toolbar-{{ $id }}"
                     @class([
-                        'relative flex flex-col gap-x-3 border-b border-gray-100 px-2.5 py-2 dark:border-white/10',
+                        'fi-fo-rich-editor-toolbar relative flex flex-col gap-x-3 border-b border-gray-100 px-2.5 py-2 dark:border-white/10',
                         'hidden' => ! count($getToolbarButtons()),
                     ])
                 >
@@ -125,7 +130,7 @@
                                 @if ($hasToolbarButton('underline'))
                                     <x-filament-forms::rich-editor.toolbar.button
                                         data-trix-attribute="underline"
-                                        title="{{ __('forms::components.rich_editor.toolbar_buttons.underline') }}"
+                                        title="{{ __('filament-forms::components.rich_editor.toolbar_buttons.underline') }}"
                                         tabindex="-1"
                                     >
                                         <svg
@@ -474,11 +479,11 @@
                     wire:ignore
                     {{
                         $getExtraInputAttributeBag()->class([
-                            'prose min-h-[theme(spacing.48)] max-w-none !border-none px-3 py-1.5 text-base text-gray-950 dark:prose-invert focus:outline-none focus-visible:outline-none dark:text-white sm:text-sm sm:leading-6',
+                            'prose min-h-[theme(spacing.48)] max-w-none !border-none px-3 py-1.5 text-base text-gray-950 dark:prose-invert focus-visible:outline-none sm:text-sm sm:leading-6 dark:text-white',
                         ])
                     }}
                 ></trix-editor>
             </div>
-        </div>
+        </x-filament::input.wrapper>
     @endif
 </x-dynamic-component>

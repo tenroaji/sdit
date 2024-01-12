@@ -32,6 +32,10 @@ class Action extends MountableAction implements Groupable, HasRecord, HasTable
             return $this->action;
         }
 
+        if ($event = $this->getLivewireEventClickHandler()) {
+            return $event;
+        }
+
         if ($record = $this->getRecord()) {
             $recordKey = $this->getLivewire()->getTableRecordKey($record);
 
@@ -109,5 +113,10 @@ class Action extends MountableAction implements Groupable, HasRecord, HasTable
         return $action
             ->table($this->getTable())
             ->record($this->getRecord());
+    }
+
+    public function getInfolistName(): string
+    {
+        return 'mountedTableActionInfolist';
     }
 }

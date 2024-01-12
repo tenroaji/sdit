@@ -4,20 +4,20 @@ return [
 
     'single' => [
 
-        'label' => 'دروستکردن',
+        'label' => 'دروستکردنی :label',
 
         'modal' => [
 
-            'heading' => 'دروستکردنی :label',
+            'heading' => ':دروستکردنی :label',
 
             'actions' => [
 
                 'create' => [
-                    'label' => 'دروستکردن',
+                    'label' => 'دروستکرن',
                 ],
 
                 'create_another' => [
-                    'label' => 'دروستکردن و دانەیەکی تر',
+                    'label' => 'دروستکردن و تۆمارێکی تر',
                 ],
 
             ],

@@ -8,8 +8,9 @@ use Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource\Pages\ListRo
 use Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource\Pages\ViewRole;
 use Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource\RelationManager\PermissionRelationManager;
 use Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource\RelationManager\UserRelationManager;
-use Filament\Forms\Components\Card;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -17,15 +18,15 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Illuminate\Database\Eloquent\Builder;
 
 class RoleResource extends Resource
 {
-    protected static ?string $model = Role::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    public static function getNavigationIcon(): ?string
+    {
+        return  config('filament-spatie-roles-permissions.icons.role_navigation');
+    }
 
     public static function shouldRegisterNavigation(): bool
     {
@@ -56,7 +57,7 @@ class RoleResource extends Resource
     {
         return $form
             ->schema([
-                Card::make()
+                Section::make()
                     ->schema([
                         Grid::make(2)
                             ->schema([
@@ -69,22 +70,14 @@ class RoleResource extends Resource
                                     ->default(config('filament-spatie-roles-permissions.default_guard_name'))
                                     ->required(),
                                 Select::make('permissions')
+                                    ->columnSpanFull()
                                     ->multiple()
                                     ->label(__('filament-spatie-roles-permissions::filament-spatie.field.permissions'))
-//                                    ->options(
-//                                        function () {
-//                                            $permissions = config('filament-spatie-roles-permissions.permission_model', Permission::class)::select('id', 'guard_name', 'name')->get();
-//
-//                                            return $permissions->mapWithKeys(function ($permission) {
-//                                                return [$permission->id => $permission->name.' ('.$permission->guard_name.')'];
-//                                            });
-//                                        }
-//                                    )
                                     ->relationship('permissions', 'name')
                                     ->preload(config('filament-spatie-roles-permissions.preload_permissions')),
                                 Select::make(config('permission.column_names.team_foreign_key', 'team_id'))
                                     ->label(__('filament-spatie-roles-permissions::filament-spatie.field.team'))
-                                    ->hidden(! config('permission.teams', false))
+                                    ->hidden(fn () => ! config('permission.teams', false) || Filament::hasTenancy())
                                     ->options(
                                         fn () => config('filament-spatie-roles-permissions.team_model', App\Models\Team::class)::pluck('name', 'id')
                                     )
@@ -109,8 +102,7 @@ class RoleResource extends Resource
                 TextColumn::make('permissions_count')
                     ->counts('permissions')
                     ->label(__('filament-spatie-roles-permissions::filament-spatie.field.permissions_count'))
-                    ->toggleable(isToggledHiddenByDefault: config('filament-spatie-roles-permissions.toggleable_guard_names.roles.isToggledHiddenByDefault', true))
-                    ->searchable(),
+                    ->toggleable(isToggledHiddenByDefault: config('filament-spatie-roles-permissions.toggleable_guard_names.roles.isToggledHiddenByDefault', true)),
                 TextColumn::make('guard_name')
                     ->toggleable(isToggledHiddenByDefault: config('filament-spatie-roles-permissions.toggleable_guard_names.roles.isToggledHiddenByDefault', true))
                     ->label(__('filament-spatie-roles-permissions::filament-spatie.field.guard_name'))
@@ -150,8 +142,4 @@ class RoleResource extends Resource
             'view' => ViewRole::route('/{record}'),
         ];
     }
-//     public static function getEloquentQuery(): Builder
-// {
-//     return parent::getEloquentQuery()->where('name','!=','Super Admin');
-// }   
 }

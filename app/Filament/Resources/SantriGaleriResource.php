@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class SantriGaleriResource extends Resource
 {
     protected static ?string $model = SantriGaleri::class;
-
+    protected static ?string $pluralModelLabel = 'Galeri Santri';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -81,14 +81,14 @@ class SantriGaleriResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -96,5 +96,5 @@ class SantriGaleriResource extends Resource
             'create' => Pages\CreateSantriGaleri::route('/create'),
             'edit' => Pages\EditSantriGaleri::route('/{record}/edit'),
         ];
-    }    
+    }
 }

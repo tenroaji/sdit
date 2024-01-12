@@ -2,11 +2,14 @@
 
 namespace Filament\Panel\Concerns;
 
+use Closure;
+use Filament\Clusters\Cluster;
 use Filament\Livewire\DatabaseNotifications;
 use Filament\Livewire\GlobalSearch;
 use Filament\Livewire\Notifications;
 use Filament\Pages\Auth\EditProfile;
 use Filament\Pages\Page;
+use Filament\Resources\Pages\Page as ResourcePage;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\RelationManagers\RelationManagerConfiguration;
@@ -45,6 +48,26 @@ trait HasComponents
     /**
      * @var array<class-string>
      */
+    protected array $clusters = [];
+
+    /**
+     * @var array<string>
+     */
+    protected array $clusterDirectories = [];
+
+    /**
+     * @var array<string>
+     */
+    protected array $clusterNamespaces = [];
+
+    /**
+     * @var array<class-string<Cluster>, array<class-string>>
+     */
+    protected array $clusteredComponents = [];
+
+    /**
+     * @var array<class-string>
+     */
     protected array $resources = [];
 
     /**
@@ -72,6 +95,8 @@ trait HasComponents
      */
     protected array $widgetNamespaces = [];
 
+    protected bool | Closure $hasReadOnlyRelationManagersOnResourceViewPagesByDefault = true;
+
     /**
      * @param  array<class-string>  $pages
      */
@@ -84,6 +109,7 @@ trait HasComponents
 
         foreach ($pages as $page) {
             $this->queueLivewireComponentForRegistration($page);
+            $this->registerToCluster($page);
         }
 
         return $this;
@@ -98,6 +124,10 @@ trait HasComponents
             ...$this->resources,
             ...$resources,
         ];
+
+        foreach ($resources as $resource) {
+            $this->registerToCluster($resource);
+        }
 
         return $this;
     }
@@ -169,7 +199,10 @@ trait HasComponents
      */
     public function getPageDirectories(): array
     {
-        return $this->pageDirectories;
+        return [
+            ...array_map(fn (string $fileName): string => ((string) str($fileName)->beforeLast('.php')) . DIRECTORY_SEPARATOR . 'Pages', array_keys($this->clusters)),
+            ...$this->pageDirectories,
+        ];
     }
 
     /**
@@ -177,7 +210,53 @@ trait HasComponents
      */
     public function getPageNamespaces(): array
     {
-        return $this->pageNamespaces;
+        return [
+            ...array_map(fn (string $namespace): string => "{$namespace}\Pages", array_values($this->clusters)),
+            ...$this->pageNamespaces,
+        ];
+    }
+
+    public function discoverClusters(string $in, string $for): static
+    {
+        $this->clusterDirectories[] = $in;
+        $this->clusterNamespaces[] = $for;
+
+        $this->discoverComponents(
+            Cluster::class,
+            $this->clusters,
+            directory: $in,
+            namespace: $for,
+        );
+        $this->discoverComponents(
+            Page::class,
+            $this->pages,
+            directory: $in,
+            namespace: $for,
+        );
+        $this->discoverComponents(
+            Resource::class,
+            $this->resources,
+            directory: $in,
+            namespace: $for,
+        );
+
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getClusterDirectories(): array
+    {
+        return $this->clusterDirectories;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getClusterNamespaces(): array
+    {
+        return $this->clusterNamespaces;
     }
 
     public function discoverResources(string $in, string $for): static
@@ -200,7 +279,10 @@ trait HasComponents
      */
     public function getResourceDirectories(): array
     {
-        return $this->resourceDirectories;
+        return [
+            ...array_map(fn (string $fileName): string => ((string) str($fileName)->beforeLast('.php')) . DIRECTORY_SEPARATOR . 'Resources', array_keys($this->clusters)),
+            ...$this->resourceDirectories,
+        ];
     }
 
     /**
@@ -208,7 +290,10 @@ trait HasComponents
      */
     public function getResourceNamespaces(): array
     {
-        return $this->resourceNamespaces;
+        return [
+            ...array_map(fn (string $namespace): string => "{$namespace}\Resources", array_values($this->clusters)),
+            ...$this->resourceNamespaces,
+        ];
     }
 
     public function discoverWidgets(string $in, string $for): static
@@ -242,6 +327,20 @@ trait HasComponents
         return $this->widgetNamespaces;
     }
 
+    public function discoverLivewireComponents(string $in, string $for): static
+    {
+        $component = [];
+
+        $this->discoverComponents(
+            Component::class,
+            $component,
+            directory: $in,
+            namespace: $for,
+        );
+
+        return $this;
+    }
+
     /**
      * @return array<class-string>
      */
@@ -265,7 +364,7 @@ trait HasComponents
     {
         return collect($this->widgets)
             ->unique()
-            ->sortBy(fn (string $widget): int => $this->normalizeWidgetClass($widget)::getSort())
+            ->sortBy(fn (string | WidgetConfiguration $widget): int => $this->normalizeWidgetClass($widget)::getSort())
             ->all();
     }
 
@@ -290,9 +389,7 @@ trait HasComponents
             $variableNamespace = $namespace->contains('*') ? str_ireplace(
                 ['\\' . $namespace->before('*'), $namespace->after('*')],
                 ['', ''],
-                str($file->getPath())
-                    ->after(base_path())
-                    ->replace(['/'], ['\\']),
+                str_replace([DIRECTORY_SEPARATOR], ['\\'], (string) str($file->getPath())->after(base_path())),
             ) : null;
 
             if (is_string($variableNamespace)) {
@@ -301,8 +398,12 @@ trait HasComponents
 
             $class = (string) $namespace
                 ->append('\\', $file->getRelativePathname())
-                ->replace('*', $variableNamespace)
-                ->replace(['/', '.php'], ['\\', '']);
+                ->replace('*', $variableNamespace ?? '')
+                ->replace([DIRECTORY_SEPARATOR, '.php'], ['\\', '']);
+
+            if (! class_exists($class)) {
+                continue;
+            }
 
             if ((new ReflectionClass($class))->isAbstract()) {
                 continue;
@@ -316,12 +417,28 @@ trait HasComponents
                 continue;
             }
 
-            if (! $class::isDiscovered()) {
+            if (
+                method_exists($class, 'isDiscovered') &&
+                (! $class::isDiscovered())
+            ) {
                 continue;
             }
 
-            $register[] = $class;
+            $register[$file->getRealPath()] = $class;
+            $this->registerToCluster($class);
         }
+    }
+
+    /**
+     * @param  array<string, class-string<Component>>  $components
+     */
+    public function livewireComponents(array $components): static
+    {
+        foreach ($components as $component) {
+            $this->queueLivewireComponentForRegistration($component);
+        }
+
+        return $this;
     }
 
     protected function registerLivewireComponents(): void
@@ -395,10 +512,53 @@ trait HasComponents
         return $manager;
     }
 
+    protected function registerToCluster(string $component): void
+    {
+        if (! method_exists($component, 'getCluster')) {
+            return;
+        }
+
+        if (is_subclass_of($component, ResourcePage::class)) {
+            return;
+        }
+
+        $cluster = $component::getCluster();
+
+        if (blank($cluster)) {
+            return;
+        }
+
+        $this->clusteredComponents[$cluster][] = $component;
+    }
+
     protected function queueLivewireComponentForRegistration(string $component): void
     {
         $componentName = app(ComponentRegistry::class)->getName($component);
 
         $this->livewireComponents[$componentName] = $component;
+    }
+
+    public function readOnlyRelationManagersOnResourceViewPagesByDefault(bool | Closure $condition = true): static
+    {
+        $this->hasReadOnlyRelationManagersOnResourceViewPagesByDefault = $condition;
+
+        return $this;
+    }
+
+    public function hasReadOnlyRelationManagersOnResourceViewPagesByDefault(): bool
+    {
+        return (bool) $this->evaluate($this->hasReadOnlyRelationManagersOnResourceViewPagesByDefault);
+    }
+
+    /**
+     * @return array<string | int, array<class-string> | class-string>
+     */
+    public function getClusteredComponents(?string $cluster = null): array
+    {
+        if (blank($cluster)) {
+            return $this->clusteredComponents;
+        }
+
+        return $this->clusteredComponents[$cluster] ?? [];
     }
 }

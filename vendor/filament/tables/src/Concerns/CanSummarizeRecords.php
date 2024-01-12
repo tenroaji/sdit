@@ -3,8 +3,10 @@
 namespace Filament\Tables\Concerns;
 
 use Closure;
-use Filament\Tables\Support\RelationshipJoiner;
+use Filament\Support\Services\RelationshipJoiner;
+use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use stdClass;
@@ -42,7 +44,10 @@ trait CanSummarizeRecords
                 continue;
             }
 
-            $qualifiedAttribute = $query->getModel()->qualifyColumn($column->getName());
+            /** @var Connection $queryConnection */
+            $queryConnection = $query->getConnection();
+
+            $qualifiedAttribute = $queryConnection->getTablePrefix() . $query->getModel()->qualifyColumn($column->getName());
 
             foreach ($summarizers as $summarizer) {
                 if ($summarizer->hasQueryModification()) {
@@ -77,10 +82,15 @@ trait CanSummarizeRecords
 
         if ($group !== null) {
             $groupSelectAlias = Str::random();
+
+            if ($group instanceof Expression) {
+                $group = $group->getValue($query->getGrammar());
+            }
+
             $selects[] = "{$group} as \"{$groupSelectAlias}\"";
 
             if (filled($groupingRelationshipName = $this->getTableGrouping()?->getRelationshipName())) {
-                $joins = (new RelationshipJoiner())->getLeftJoinsForRelationship(
+                $joins = app(RelationshipJoiner::class)->getLeftJoinsForRelationship(
                     query: $queryToJoin,
                     relationship: $groupingRelationshipName,
                 );

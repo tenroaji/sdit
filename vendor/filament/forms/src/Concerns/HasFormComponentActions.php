@@ -8,7 +8,8 @@ use Filament\Forms\Components\Component;
 use Filament\Forms\Form;
 use Filament\Support\Exceptions\Cancel;
 use Filament\Support\Exceptions\Halt;
-use Illuminate\Support\Arr;
+use Illuminate\Validation\ValidationException;
+
 use function Livewire\store;
 
 /**
@@ -51,10 +52,7 @@ trait HasFormComponentActions
             return null;
         }
 
-        $action->arguments([
-            ...Arr::last($this->mountedFormComponentActionsArguments ?? []),
-            ...$arguments,
-        ]);
+        $action->mergeArguments($arguments);
 
         $form = $this->getMountedFormComponentActionForm();
 
@@ -79,14 +77,23 @@ trait HasFormComponentActions
         } catch (Halt $exception) {
             return null;
         } catch (Cancel $exception) {
-        }
+        } catch (ValidationException $exception) {
+            if (! $this->mountedFormComponentActionShouldOpenModal()) {
+                $action->resetArguments();
+                $action->resetFormData();
 
-        $action->resetArguments();
-        $action->resetFormData();
+                $this->unmountFormComponentAction();
+            }
+
+            throw $exception;
+        }
 
         if (store($this)->has('redirect')) {
             return $result;
         }
+
+        $action->resetArguments();
+        $action->resetFormData();
 
         $this->unmountFormComponentAction();
 
@@ -116,8 +123,6 @@ trait HasFormComponentActions
 
             return null;
         }
-
-        $action->arguments($arguments);
 
         $this->cacheMountedFormComponentActionForm();
 
@@ -170,9 +175,10 @@ trait HasFormComponentActions
             return false;
         }
 
-        return $action->getModalDescription() ||
-            $action->getModalContent() ||
-            $action->getModalContentFooter() ||
+        return $action->hasCustomModalHeading() ||
+            $action->hasModalDescription() ||
+            $action->hasModalContent() ||
+            $action->hasModalContentFooter() ||
             $action->getInfolist() ||
             $this->mountedFormComponentActionHasForm();
     }
@@ -191,7 +197,9 @@ trait HasFormComponentActions
             return null;
         }
 
-        return $this->getMountedFormComponentActionComponent($actionNestingIndex)?->getAction($actionName);
+        return $this->getMountedFormComponentActionComponent($actionNestingIndex)
+            ?->getAction($actionName)
+            ?->arguments($this->mountedFormComponentActionsArguments[$actionNestingIndex] ?? []);
     }
 
     protected function getMountedFormComponentActionForm(?int $actionNestingIndex = null): ?Form

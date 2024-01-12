@@ -1,5 +1,21 @@
 @php
     use Filament\Support\Enums\Alignment;
+    use Filament\Support\Facades\FilamentView;
+
+    $imageCropAspectRatio = $getImageCropAspectRatio();
+    $imageResizeTargetHeight = $getImageResizeTargetHeight();
+    $imageResizeTargetWidth = $getImageResizeTargetWidth();
+    $isAvatar = $isAvatar();
+    $statePath = $getStatePath();
+    $isDisabled = $isDisabled();
+    $hasImageEditor = $hasImageEditor();
+    $hasCircleCropper = $hasCircleCropper();
+
+    $alignment = $getAlignment() ?? Alignment::Start;
+
+    if (! $alignment instanceof Alignment) {
+        $alignment = filled($alignment) ? (Alignment::tryFrom($alignment) ?? $alignment) : null;
+    }
 @endphp
 
 <x-dynamic-component
@@ -7,18 +23,12 @@
     :field="$field"
     :label-sr-only="$isLabelHidden()"
 >
-    @php
-        $imageCropAspectRatio = $getImageCropAspectRatio();
-        $imageResizeTargetHeight = $getImageResizeTargetHeight();
-        $imageResizeTargetWidth = $getImageResizeTargetWidth();
-        $isAvatar = $isAvatar();
-        $statePath = $getStatePath();
-        $isDisabled = $isDisabled();
-        $hasImageEditor = $hasImageEditor();
-    @endphp
-
     <div
-        ax-load
+        @if (FilamentView::hasSpaMode())
+            ax-load="visible"
+        @else
+            ax-load
+        @endif
         ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('file-upload', 'filament/forms') }}"
         x-data="fileUploadFormComponent({
                     acceptedFileTypes: @js($getAcceptedFileTypes()),
@@ -33,6 +43,11 @@
                         return await $wire.getFormUploadedFiles(@js($statePath))
                     },
                     hasImageEditor: @js($hasImageEditor),
+                    hasCircleCropper: @js($hasCircleCropper),
+                    canEditSvgs: @js($canEditSvgs()),
+                    isSvgEditingConfirmed: @js($isSvgEditingConfirmed()),
+                    confirmSvgEditingMessage: @js(__('filament-forms::components.file_upload.editor.svg.messages.confirmation')),
+                    disabledSvgEditingMessage: @js(__('filament-forms::components.file_upload.editor.svg.messages.disabled')),
                     imageCropAspectRatio: @js($imageCropAspectRatio),
                     imagePreviewHeight: @js($getImagePreviewHeight()),
                     imageResizeMode: @js($getImageResizeMode()),
@@ -40,8 +55,10 @@
                     imageResizeTargetWidth: @js($imageResizeTargetWidth),
                     imageResizeUpscale: @js($getImageResizeUpscale()),
                     isAvatar: @js($isAvatar),
+                    isDeletable: @js($isDeletable()),
                     isDisabled: @js($isDisabled),
                     isDownloadable: @js($isDownloadable()),
+                    isMultiple: @js($isMultiple()),
                     isOpenable: @js($isOpenable()),
                     isPreviewable: @js($isPreviewable()),
                     isReorderable: @js($isReorderable()),
@@ -62,7 +79,7 @@
                     shouldAppendFiles: @js($shouldAppendFiles()),
                     shouldOrientImageFromExif: @js($shouldOrientImagesFromExif()),
                     shouldTransformImage: @js($imageCropAspectRatio || $imageResizeTargetHeight || $imageResizeTargetWidth),
-                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
+                    state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                     uploadButtonPosition: @js($getUploadButtonPosition()),
                     uploadProgressIndicatorPosition: @js($getUploadProgressIndicatorPosition()),
                     uploadUsing: (fileKey, file, success, error, progress) => {
@@ -73,7 +90,9 @@
                                 success(fileKey)
                             },
                             error,
-                            progress,
+                            (progressEvent) => {
+                                progress(true, progressEvent.detail.progress, 100)
+                            },
                         )
                     },
                 })"
@@ -87,13 +106,15 @@
                 ->merge($getExtraAttributes(), escape: false)
                 ->merge($getExtraAlpineAttributes(), escape: false)
                 ->class([
-                    'fi-fo-file-upload flex',
-                    match ($getAlignment()) {
-                        Alignment::Center, 'center' => 'justify-center',
-                        Alignment::End, 'end' => 'justify-end',
-                        Alignment::Left, 'left' => 'justify-left',
-                        Alignment::Right, 'right' => 'justify-right',
-                        Alignment::Start, 'start', null => 'justify-start',
+                    'fi-fo-file-upload flex [&_.filepond--root]:font-sans',
+                    match ($alignment) {
+                        Alignment::Start => 'justify-start',
+                        Alignment::Center => 'justify-center',
+                        Alignment::End => 'justify-end',
+                        Alignment::Left => 'justify-left',
+                        Alignment::Right => 'justify-right',
+                        Alignment::Between, Alignment::Justify => 'justify-between',
+                        default => $alignment,
                     },
                 ])
         }}
@@ -122,10 +143,13 @@
             <div
                 x-show="isEditorOpen"
                 x-cloak
-                x-on:click.stop
+                x-on:click.stop=""
                 x-trap.noscroll="isEditorOpen"
                 x-on:keydown.escape.window="closeEditor"
-                class="fixed inset-0 isolate z-50 h-screen w-screen p-2 sm:p-10 md:p-20"
+                @class([
+                    'fixed inset-0 isolate z-50 h-screen w-screen p-2 sm:p-10 md:p-20',
+                    'fi-fo-file-upload-circle-cropper' => $hasCircleCropper,
+                ])
             >
                 <div
                     aria-hidden="true"
@@ -137,7 +161,7 @@
                     class="isolate z-10 flex h-full w-full items-center justify-center"
                 >
                     <div
-                        class="mx-auto flex h-full w-full flex-col overflow-hidden rounded-xl bg-white ring-1 ring-gray-900/10 dark:bg-gray-800 dark:ring-gray-50/10 lg:flex-row"
+                        class="mx-auto flex h-full w-full flex-col overflow-hidden rounded-xl bg-white ring-1 ring-gray-900/10 lg:flex-row dark:bg-gray-800 dark:ring-gray-50/10"
                     >
                         <div class="w-full flex-1 overflow-auto p-4 lg:h-full">
                             <div class="h-full w-full">
@@ -146,7 +170,7 @@
                         </div>
 
                         <div
-                            class="shadow-top z-[1] flex h-96 w-full flex-col overflow-auto bg-gray-50 dark:bg-gray-900/30 lg:h-full lg:max-w-xs lg:shadow-none"
+                            class="shadow-top z-[1] flex h-96 w-full flex-col overflow-auto bg-gray-50 lg:h-full lg:max-w-xs lg:shadow-none dark:bg-gray-900/30"
                         >
                             <div class="flex-1 overflow-hidden">
                                 <div
@@ -191,14 +215,14 @@
                                                         class="flex w-full items-center rounded-lg border border-gray-300 bg-gray-100 text-sm shadow-sm dark:border-gray-700 dark:bg-gray-800"
                                                     >
                                                         <span
-                                                            class="flex w-20 flex-shrink-0 items-center justify-center self-stretch border-e border-gray-300 px-2 dark:border-gray-700"
+                                                            class="flex w-20 shrink-0 items-center justify-center self-stretch border-e border-gray-300 px-2 dark:border-gray-700"
                                                         >
                                                             {{ $input['label'] }}
                                                         </span>
 
                                                         <input
                                                             @class([
-                                                                'block w-full border-none text-sm transition duration-75 focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 disabled:opacity-70 dark:bg-gray-700 dark:text-white dark:focus:border-primary-500',
+                                                                'block w-full border-none text-sm transition duration-75 focus-visible:border-primary-500 focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary-500 disabled:opacity-70 dark:bg-gray-700 dark:text-white dark:focus-visible:border-primary-500',
                                                             ])
                                                             x-on:keyup.enter.stop.prevent="{{ $input['alpineSaveHandler'] }}"
                                                             x-on:blur="{{ $input['alpineSaveHandler'] }}"
@@ -223,10 +247,7 @@
                                                     >
                                                         @foreach ($groupedActions as $action)
                                                             <x-filament::button
-                                                                x-tooltip="{
-                                                                    content: @js($action['label']),
-                                                                    theme: $store.theme,
-                                                                }"
+                                                                :x-tooltip="'{ content: ' . \Illuminate\Support\Js::from($action['label']) . ', theme: $store.theme }'"
                                                                 x-on:click.stop.prevent="{{ $action['alpineClickHandler'] }}"
                                                                 color="gray"
                                                                 grouped
@@ -258,10 +279,7 @@
                                                         >
                                                             @foreach ($ratiosChunk as $label => $ratio)
                                                                 <x-filament::button
-                                                                    x-tooltip="{
-                                                                        content: @js(__('filament-forms::components.file_upload.editor.actions.set_aspect_ratio.label', ['ratio' => $label])),
-                                                                        theme: $store.theme,
-                                                                    }"
+                                                                    :x-tooltip="'{ content: ' . \Illuminate\Support\Js::from(__('filament-forms::components.file_upload.editor.actions.set_aspect_ratio.label', ['ratio' => $label])) . ', theme: $store.theme }'"
                                                                     x-on:click.stop.prevent="currentRatio = '{{ $label }}'; editor.setAspectRatio({{ $ratio }})"
                                                                     color="gray"
                                                                     x-bind:class="{'!bg-gray-50 dark:!bg-gray-700': currentRatio === '{{ $label }}'}"

@@ -11,6 +11,7 @@ use Filament\Support\Commands\AssetsCommand;
 use Filament\Support\Commands\CheckTranslationsCommand;
 use Filament\Support\Commands\InstallCommand;
 use Filament\Support\Commands\UpgradeCommand;
+use Filament\Support\Components\ComponentManager;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Icons\IconManager;
 use Filament\Support\View\ViewManager;
@@ -48,6 +49,8 @@ class SupportServiceProvider extends PackageServiceProvider
             fn () => new AssetManager(),
         );
 
+        ComponentManager::register();
+
         $this->app->scoped(
             ColorManager::class,
             fn () => new ColorManager(),
@@ -79,8 +82,6 @@ class SupportServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        config()->set('livewire.inject_morph_markers', false);
-
         FilamentAsset::register([
             Js::make('async-alpine', __DIR__ . '/../dist/async-alpine.js'),
             Css::make('support', __DIR__ . '/../dist/index.css'),
@@ -99,6 +100,10 @@ class SupportServiceProvider extends PackageServiceProvider
             return "<?php echo \Filament\Support\Facades\FilamentAsset::renderStyles({$expression}) ?>";
         });
 
+        Blade::extend(function ($view) {
+            return preg_replace('/\s*@trim\s*/m', '', $view);
+        });
+
         Str::macro('sanitizeHtml', function (string $html): string {
             return app(HtmlSanitizerInterface::class)->sanitize($html);
         });
@@ -108,7 +113,19 @@ class SupportServiceProvider extends PackageServiceProvider
             return new Stringable(Str::sanitizeHtml($this->value));
         });
 
-        if (class_exists(AboutCommand::class) && class_exists(InstalledVersions::class)) {
+        Str::macro('ucwords', function (string $value): string {
+            return implode(' ', array_map(
+                [Str::class, 'ucfirst'],
+                explode(' ', $value),
+            ));
+        });
+
+        Stringable::macro('ucwords', function (): Stringable {
+            /** @phpstan-ignore-next-line */
+            return new Stringable(Str::ucwords($this->value));
+        });
+
+        if (class_exists(InstalledVersions::class)) {
             $packages = [
                 'filament',
                 'forms',
@@ -117,7 +134,7 @@ class SupportServiceProvider extends PackageServiceProvider
                 'tables',
             ];
 
-            AboutCommand::add('Filament', [
+            AboutCommand::add('Filament', static fn () => [
                 'Version' => InstalledVersions::getPrettyVersion('filament/support'),
                 'Packages' => collect($packages)
                     ->filter(fn (string $package): bool => InstalledVersions::isInstalled("filament/{$package}"))

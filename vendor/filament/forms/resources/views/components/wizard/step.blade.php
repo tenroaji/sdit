@@ -11,33 +11,16 @@
 @endphp
 
 <div
-    x-bind:class="step === @js($id) ? @js($visibleStepClasses) : @js($invisibleStepClasses)"
-    x-on:expand-concealing-component.window="
-        error = $el.querySelector('[data-validation-error]')
-
-        if (! error) {
-            return
-        }
-
-        if (! isStepAccessible(step, @js($id))) {
+    x-bind:class="{
+        @js($visibleStepClasses): step === @js($id),
+        @js($invisibleStepClasses): step !== @js($id),
+    }"
+    x-on:expand="
+        if (! isStepAccessible(@js($id))) {
             return
         }
 
         step = @js($id)
-
-        if (document.body.querySelector('[data-validation-error]') !== error) {
-            return
-        }
-
-        setTimeout(
-            () =>
-                $el.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                    inline: 'start',
-                }),
-            200,
-        )
     "
     x-ref="step-{{ $id }}"
     {{

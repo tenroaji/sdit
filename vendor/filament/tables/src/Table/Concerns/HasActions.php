@@ -34,6 +34,21 @@ trait HasActions
      */
     public function actions(array | ActionGroup $actions, ActionsPosition | string | Closure | null $position = null): static
     {
+        $this->actions = [];
+        $this->pushActions($actions);
+
+        if ($position) {
+            $this->actionsPosition($position);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  array<Action | ActionGroup> | ActionGroup  $actions
+     */
+    public function pushActions(array | ActionGroup $actions): static
+    {
         foreach (Arr::wrap($actions) as $action) {
             $action->table($this);
 
@@ -57,8 +72,6 @@ trait HasActions
 
             $this->actions[] = $action;
         }
-
-        $this->actionsPosition($position);
 
         return $this;
     }
@@ -119,7 +132,6 @@ trait HasActions
         return $this->getMountableModalActionFromAction(
             $action->record($mountedRecord),
             modalActionNames: $modalActionNames ?? [],
-            parentActionName: $name,
             mountedRecord: $mountedRecord,
         );
     }
@@ -137,27 +149,47 @@ trait HasActions
         return array_key_exists($name, $this->getFlatActions());
     }
 
-    protected function cacheAction(Action $action): void
+    protected function cacheAction(Action $action, bool $shouldOverwriteExistingAction = true): void
     {
-        $this->flatActions[$action->getName()] = $action;
+        if ($shouldOverwriteExistingAction) {
+            $this->flatActions[$action->getName()] = $action;
+        } else {
+            $this->flatActions[$action->getName()] ??= $action;
+        }
     }
 
     /**
      * @param  array<string, Action>  $actions
      */
-    protected function mergeCachedFlatActions(array $actions): void
+    protected function mergeCachedFlatActions(array $actions, bool $shouldOverwriteExistingActions = true): void
     {
-        $this->flatActions = [
-            ...$this->flatActions,
-            ...$actions,
-        ];
+        if ($shouldOverwriteExistingActions) {
+            $this->flatActions = [
+                ...$this->flatActions,
+                ...$actions,
+            ];
+        } else {
+            $this->flatActions = [
+                ...$actions,
+                ...$this->flatActions,
+            ];
+        }
     }
 
     /**
      * @param  array<string>  $modalActionNames
      */
-    protected function getMountableModalActionFromAction(Action $action, array $modalActionNames, string $parentActionName, ?Model $mountedRecord = null): ?Action
+    protected function getMountableModalActionFromAction(Action $action, array $modalActionNames, ?Model $mountedRecord = null): ?Action
     {
+        $arguments = $this->getLivewire()->mountedTableActionsArguments ?? [];
+
+        if (
+            (($actionArguments = array_shift($arguments)) !== null) &&
+            (! $action->hasArguments())
+        ) {
+            $action->arguments($actionArguments);
+        }
+
         foreach ($modalActionNames as $modalActionName) {
             $action = $action->getMountableModalAction($modalActionName);
 
@@ -169,7 +201,12 @@ trait HasActions
                 $action->record($mountedRecord);
             }
 
-            $parentActionName = $modalActionName;
+            if (
+                (($actionArguments = array_shift($arguments)) !== null) &&
+                (! $action->hasArguments())
+            ) {
+                $action->arguments($actionArguments);
+            }
         }
 
         if (! $action instanceof Action) {

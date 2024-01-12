@@ -41,11 +41,19 @@
         };
     @endphp
 
-    @if (count($limitedState))
-        <div class="fi-in-image flex items-center gap-x-2.5">
+    <div
+        {{
+            $attributes
+                ->merge($getExtraAttributes(), escape: false)
+                ->class([
+                    'fi-in-image flex items-center gap-x-2.5',
+                ])
+        }}
+    >
+        @if (count($limitedState))
             <div
                 @class([
-                    'flex',
+                    'flex flex-wrap',
                     match ($overlap) {
                         0 => null,
                         1 => '-space-x-1',
@@ -56,7 +64,7 @@
                         6 => '-space-x-6',
                         7 => '-space-x-7',
                         8 => '-space-x-8',
-                        default => 'gap-x-1.5',
+                        default => 'gap-1.5',
                     },
                 ])
             >
@@ -112,6 +120,10 @@
                     +{{ count($state) - count($limitedState) }}
                 </div>
             @endif
-        </div>
-    @endif
+        @elseif (($placeholder = $getPlaceholder()) !== null)
+            <x-filament-infolists::entries.placeholder>
+                {{ $placeholder }}
+            </x-filament-infolists::entries.placeholder>
+        @endif
+    </div>
 </x-dynamic-component>

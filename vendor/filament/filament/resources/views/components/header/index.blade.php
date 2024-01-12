@@ -17,7 +17,7 @@
         @endif
 
         <h1
-            class="fi-header-heading text-2xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-3xl"
+            class="fi-header-heading text-2xl font-bold tracking-tight text-gray-950 sm:text-3xl dark:text-white"
         >
             {{ $heading }}
         </h1>
@@ -31,6 +31,8 @@
         @endif
     </div>
 
+    {{ \Filament\Support\Facades\FilamentView::renderHook('panels::page.header.actions.before', scopes: $this->getRenderHookScopes()) }}
+
     @if ($actions)
         <x-filament-actions::actions
             :actions="$actions"
@@ -40,4 +42,6 @@
             ])
         />
     @endif
+
+    {{ \Filament\Support\Facades\FilamentView::renderHook('panels::page.header.actions.after', scopes: $this->getRenderHookScopes()) }}
 </header>

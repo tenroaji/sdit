@@ -1,5 +1,6 @@
 @php
     use Filament\Support\Enums\Alignment;
+    use Filament\Support\Enums\MaxWidth;
 @endphp
 
 @props([
@@ -27,6 +28,20 @@
     'visible' => true,
     'width' => 'sm',
 ])
+
+@php
+    if (! $alignment instanceof Alignment) {
+        $alignment = filled($alignment) ? (Alignment::tryFrom($alignment) ?? $alignment) : null;
+    }
+
+    if (! $footerActionsAlignment instanceof Alignment) {
+        $footerActionsAlignment = filled($footerActionsAlignment) ? (Alignment::tryFrom($footerActionsAlignment) ?? $footerActionsAlignment) : null;
+    }
+
+    if (! $width instanceof MaxWidth) {
+        $width = filled($width) ? (MaxWidth::tryFrom($width) ?? $width) : null;
+    }
+@endphp
 
 <div
     @if ($ariaLabelledby)
@@ -65,6 +80,7 @@
     wire:ignore.self
     @class([
         'fi-modal',
+        'fi-width-screen' => $width === MaxWidth::Screen,
         $displayClasses,
     ])
 >
@@ -108,7 +124,7 @@
             {{
                 $attributes->class([
                     'pointer-events-none relative w-full transition',
-                    'my-auto p-4' => ! ($slideOver || ($width === 'screen')),
+                    'my-auto p-4' => ! ($slideOver || ($width === MaxWidth::Screen)),
                 ])
             }}
         >
@@ -129,7 +145,7 @@
                 x-show="isShown"
                 x-transition:enter="duration-300"
                 x-transition:leave="duration-300"
-                @if ($width === 'screen')
+                @if ($width === MaxWidth::Screen)
                 @elseif ($slideOver)
                     x-transition:enter-start="translate-x-full rtl:-translate-x-full"
                     x-transition:enter-end="translate-x-0"
@@ -144,32 +160,46 @@
                 @class([
                     'fi-modal-window pointer-events-auto relative flex w-full cursor-default flex-col bg-white shadow-xl ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10',
                     'fi-modal-slide-over-window ms-auto overflow-y-auto' => $slideOver,
-                    'h-screen' => $slideOver || ($width === 'screen'),
-                    'mx-auto rounded-xl' => ! ($slideOver || ($width === 'screen')),
+                    'h-screen' => $slideOver || ($width === MaxWidth::Screen),
+                    'mx-auto rounded-xl' => ! ($slideOver || ($width === MaxWidth::Screen)),
                     'hidden' => ! $visible,
-                    'max-w-xs' => $width === 'xs',
-                    'max-w-sm' => $width === 'sm',
-                    'max-w-md' => $width === 'md',
-                    'max-w-lg' => $width === 'lg',
-                    'max-w-xl' => $width === 'xl',
-                    'max-w-2xl' => $width === '2xl',
-                    'max-w-3xl' => $width === '3xl',
-                    'max-w-4xl' => $width === '4xl',
-                    'max-w-5xl' => $width === '5xl',
-                    'max-w-6xl' => $width === '6xl',
-                    'max-w-7xl' => $width === '7xl',
-                    'fixed inset-0' => $width === 'screen',
+                    match ($width) {
+                        MaxWidth::ExtraSmall => 'max-w-xs',
+                        MaxWidth::Small => 'max-w-sm',
+                        MaxWidth::Medium => 'max-w-md',
+                        MaxWidth::Large => 'max-w-lg',
+                        MaxWidth::ExtraLarge => 'max-w-xl',
+                        MaxWidth::TwoExtraLarge => 'max-w-2xl',
+                        MaxWidth::ThreeExtraLarge => 'max-w-3xl',
+                        MaxWidth::FourExtraLarge => 'max-w-4xl',
+                        MaxWidth::FiveExtraLarge => 'max-w-5xl',
+                        MaxWidth::SixExtraLarge => 'max-w-6xl',
+                        MaxWidth::SevenExtraLarge => 'max-w-7xl',
+                        MaxWidth::Full => 'max-w-full',
+                        MaxWidth::MinContent => 'max-w-min',
+                        MaxWidth::MaxContent => 'max-w-max',
+                        MaxWidth::FitContent => 'max-w-fit',
+                        MaxWidth::Prose => 'max-w-prose',
+                        MaxWidth::ScreenSmall => 'max-w-screen-sm',
+                        MaxWidth::ScreenMedium => 'max-w-screen-md',
+                        MaxWidth::ScreenLarge => 'max-w-screen-lg',
+                        MaxWidth::ScreenExtraLarge => 'max-w-screen-xl',
+                        MaxWidth::ScreenTwoExtraLarge => 'max-w-screen-2xl',
+                        MaxWidth::Screen => 'fixed inset-0',
+                        default => $width,
+                    },
                 ])
             >
                 @if ($heading || $header)
                     <div
                         @class([
                             'fi-modal-header flex px-6 pt-6',
-                            'sticky top-0 z-10 border-b border-gray-200 bg-white bg-white pb-6 dark:border-white/10 dark:bg-gray-900' => $stickyHeader,
-                            'rounded-t-xl' => $stickyHeader && ! ($slideOver || ($width === 'screen')),
+                            'fi-sticky sticky top-0 z-10 border-b border-gray-200 bg-white pb-6 dark:border-white/10 dark:bg-gray-900' => $stickyHeader,
+                            'rounded-t-xl' => $stickyHeader && ! ($slideOver || ($width === MaxWidth::Screen)),
                             match ($alignment) {
-                                Alignment::Left, Alignment::Start, 'left', 'start' => 'gap-x-5',
-                                Alignment::Center, 'center' => 'flex-col',
+                                Alignment::Start, Alignment::Left => 'gap-x-5',
+                                Alignment::Center => 'flex-col',
+                                default => null,
                             },
                         ])
                     >
@@ -189,7 +219,7 @@
                                     :label="__('filament::components/modal.actions.close.label')"
                                     tabindex="-1"
                                     :x-on:click="filled($id) ? '$dispatch(' . \Illuminate\Support\Js::from($closeEventName) . ', { id: ' . \Illuminate\Support\Js::from($id) . ' })' : 'close()'"
-                                    class="fi-modal-close-btn -m-1.5"
+                                    class="fi-modal-close-btn"
                                 />
                             </div>
                         @endif
@@ -200,18 +230,29 @@
                             @if ($icon)
                                 <div
                                     @class([
-                                        'mb-5 flex items-center justify-center' => in_array($alignment, [Alignment::Center, 'center']),
+                                        'mb-5 flex items-center justify-center' => $alignment === Alignment::Center,
                                     ])
                                 >
                                     <div
                                         @class([
-                                            'rounded-full bg-custom-100 dark:bg-custom-500/20',
+                                            'rounded-full',
+                                            match ($iconColor) {
+                                                'gray' => 'fi-color-gray bg-gray-100 dark:bg-gray-500/20',
+                                                default => 'fi-color-custom bg-custom-100 dark:bg-custom-500/20',
+                                            },
                                             match ($alignment) {
-                                                Alignment::Left, Alignment::Start, 'left', 'start' => 'p-2',
-                                                Alignment::Center, 'center' => 'p-3',
+                                                Alignment::Start, Alignment::Left => 'p-2',
+                                                Alignment::Center => 'p-3',
+                                                default => null,
                                             },
                                         ])
-                                        style="{{ \Filament\Support\get_color_css_variables($iconColor, shades: [100, 500]) }}"
+                                        @style([
+                                            \Filament\Support\get_color_css_variables(
+                                                $iconColor,
+                                                shades: [100, 400, 500, 600],
+                                                alias: 'modal.icon',
+                                            ) => $iconColor !== 'gray',
+                                        ])
                                     >
                                         <x-filament::icon
                                             :alias="$iconAlias"
@@ -223,9 +264,6 @@
                                                     default => 'text-custom-600 dark:text-custom-400',
                                                 },
                                             ])
-                                            @style([
-                                                \Filament\Support\get_color_css_variables($iconColor, shades: [400, 600]) => $iconColor !== 'gray',
-                                            ])
                                         />
                                     </div>
                                 </div>
@@ -233,7 +271,7 @@
 
                             <div
                                 @class([
-                                    'text-center' => in_array($alignment, [Alignment::Center, 'center']),
+                                    'text-center' => $alignment === Alignment::Center,
                                 ])
                             >
                                 <x-filament::modal.heading>
@@ -254,23 +292,23 @@
                     <div
                         @class([
                             'fi-modal-content flex flex-col gap-y-4 py-6',
-                            'flex-1' => ($width === 'screen') || $slideOver,
-                            'pe-6 ps-[5.25rem]' => $icon && in_array($alignment, [Alignment::Start, 'start']),
-                            'px-6' => ! ($icon && in_array($alignment, [Alignment::Start, 'start'])),
+                            'flex-1' => ($width === MaxWidth::Screen) || $slideOver,
+                            'pe-6 ps-[5.25rem]' => $icon && ($alignment === Alignment::Start),
+                            'px-6' => ! ($icon && ($alignment === Alignment::Start)),
                         ])
                     >
                         {{ $slot }}
                     </div>
                 @endif
 
-                @if (count($footerActions) || (! \Filament\Support\is_slot_empty($footer)))
+                @if ((! \Filament\Support\is_slot_empty($footer)) || (is_array($footerActions) && count($footerActions)) || (! is_array($footerActions) && (! \Filament\Support\is_slot_empty($footerActions))))
                     <div
                         @class([
                             'fi-modal-footer w-full',
-                            'pe-6 ps-[5.25rem]' => $icon && in_array($alignment, [Alignment::Start, 'start']) && (! in_array($footerActionsAlignment, [Alignment::Center, 'center'])) && (! $stickyFooter),
-                            'px-6' => ! ($icon && in_array($alignment, [Alignment::Start, 'start']) && (! in_array($footerActionsAlignment, [Alignment::Center, 'center'])) && (! $stickyFooter)),
-                            'sticky bottom-0 border-t border-gray-200 bg-white py-5 dark:border-white/10 dark:bg-gray-900' => $stickyFooter,
-                            'rounded-b-xl' => $stickyFooter && ! ($slideOver || ($width === 'screen')),
+                            'pe-6 ps-[5.25rem]' => $icon && ($alignment === Alignment::Start) && ($footerActionsAlignment !== Alignment::Center) && (! $stickyFooter),
+                            'px-6' => ! ($icon && ($alignment === Alignment::Start) && ($footerActionsAlignment !== Alignment::Center) && (! $stickyFooter)),
+                            'fi-sticky sticky bottom-0 border-t border-gray-200 bg-white py-5 dark:border-white/10 dark:bg-gray-900' => $stickyFooter,
+                            'rounded-b-xl' => $stickyFooter && ! ($slideOver || ($width === MaxWidth::Screen)),
                             'pb-6' => ! $stickyFooter,
                             'mt-6' => (! $stickyFooter) && \Filament\Support\is_slot_empty($slot),
                             'mt-auto' => $slideOver,
@@ -278,20 +316,25 @@
                     >
                         @if (! \Filament\Support\is_slot_empty($footer))
                             {{ $footer }}
-                        @elseif (count($footerActions))
+                        @else
                             <div
                                 @class([
                                     'fi-modal-footer-actions gap-3',
                                     match ($footerActionsAlignment) {
-                                        Alignment::Center, 'center' => 'flex flex-col-reverse sm:grid sm:grid-cols-[repeat(auto-fit,minmax(0,1fr))]',
-                                        Alignment::End, Alignment::Right, 'end', 'right' => 'flex flex-row-reverse flex-wrap items-center',
-                                        Alignment::Left, Alignment::Start, 'left', 'start' => 'flex flex-wrap items-center',
+                                        Alignment::Start, Alignment::Left => 'flex flex-wrap items-center',
+                                        Alignment::Center => 'flex flex-col-reverse sm:grid sm:grid-cols-[repeat(auto-fit,minmax(0,1fr))]',
+                                        Alignment::End, Alignment::Right => 'flex flex-row-reverse flex-wrap items-center',
+                                        default => null,
                                     },
                                 ])
                             >
-                                @foreach ($footerActions as $action)
-                                    {{ $action }}
-                                @endforeach
+                                @if (is_array($footerActions))
+                                    @foreach ($footerActions as $action)
+                                        {{ $action }}
+                                    @endforeach
+                                @else
+                                    {{ $footerActions }}
+                                @endif
                             </div>
                         @endif
                     </div>

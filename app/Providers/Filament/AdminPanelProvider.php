@@ -6,10 +6,10 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
+use App\Models\User;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
 use App\Filament\Pages\Auth\EditProfile;
-use Filament\Navigation\NavigationItem;
 use App\Filament\Resources\UserResource;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Session\Middleware\StartSession;
@@ -24,7 +24,6 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use Althinect\FilamentSpatieRolesPermissions\Resources\PermissionResource;
 use Althinect\FilamentSpatieRolesPermissions\Resources\RoleResource;
-use App\Models\User;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -69,20 +68,20 @@ class AdminPanelProvider extends PanelProvider
                 MenuItem::make()
                     ->label('User')
                     ->url(fn (): string => UserResource::getUrl())
-                    ->icon('heroicon-o-cog-6-tooth'),
-                    // MenuItem::make()
-                    // ->label('Role')
-                    // ->url(fn (): string => RoleResource::getUrl())
-                    // ->icon('heroicon-o-cog-6-tooth'),
-                    // MenuItem::make()
-                    // ->label('Permission')
-                    // ->url(fn (): string => PermissionResource::getUrl())
-                    // ->icon('heroicon-o-cog-6-tooth')
-
-                    
-                    // ->visible(fn (): bool => auth()->user()->hasRole('Super Admin')),
+                    ->icon('heroicon-o-cog-6-tooth')
+                    ->visible(fn (): bool => auth()->user()->hasRole('Super Admin')),
+                MenuItem::make()
+                ->label('Role')
+                ->url(fn (): string => RoleResource::getUrl())
+                ->icon('heroicon-o-cog-6-tooth')
+                ->visible(fn (): bool => auth()->user()->hasRole('Super Admin')),
+                MenuItem::make()
+                ->label('Permission')
+                ->url(fn (): string => PermissionResource::getUrl())
+                ->icon('heroicon-o-cog-6-tooth')
+                ->visible(fn (): bool => auth()->user()->hasRole('Super Admin')),
                 // ...
             ]);
-            
+
     }
 }

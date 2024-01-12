@@ -60,6 +60,8 @@ public function panel(Panel $panel): Panel
 }
 ```
 
+Make sure your `routes/web.php` file doesn't already define the `''` or `'/'` route, as it will take precedence.
+
 ## Render hooks
 
 [Render hooks](../support/render-hooks) allow you to render Blade content at various points in the framework views. You can [register global render hooks](../support/render-hooks#registering-render-hooks) in a service provider or middleware, but it also allows you to register render hooks that are specific to a panel. To do that, you can use the `renderHook()` method on the panel configuration object. Here's an example, integrating [`wire-elements/modal`](https://github.com/wire-elements/modal) with Filament:
@@ -93,5 +95,117 @@ public function panel(Panel $panel): Panel
     return $panel
         // ...
         ->domain('admin.example.com');
+}
+```
+
+## Customizing the maximum content width
+
+By default, Filament will restrict the width of the content on the page, so it doesn't become too wide on large screens. To change this, you may use the `maxContentWidth()` method. Options correspond to [Tailwind's max-width scale](https://tailwindcss.com/docs/max-width). The options are `ExtraSmall`, `Small`, `Medium`, `Large`, `ExtraLarge`, `TwoExtraLarge`, `ThreeExtraLarge`, `FourExtraLarge`, `FiveExtraLarge`, `SixExtraLarge`, `SevenExtraLarge`, `Full`, `MinContent`, `MaxContent`, `FitContent`,  `Prose`, `ScreenSmall`, `ScreenMedium`, `ScreenLarge`, `ScreenExtraLarge` and `ScreenTwoExtraLarge`. The default is `SevenExtraLarge`:
+
+```php
+use Filament\Panel;
+use Filament\Support\Enums\MaxWidth;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->maxContentWidth(MaxWidth::Full);
+}
+```
+
+## Lifecycle hooks
+
+Hooks may be used to execute code during a panel's lifecycle. `bootUsing()` is a hook that gets run on every request that takes place within that panel. If you have multiple panels, only the current panel's `bootUsing()` will be run. The function gets run from middleware, after all service providers have been booted:
+
+```php
+use Filament\Panel;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->bootUsing(function (Panel $panel) {
+            // ...
+        });
+}
+```
+
+## SPA mode
+
+SPA mode utilizes [Livewire's `wire:navigate` feature](https://livewire.laravel.com/docs/navigate) to make your server-rendered panel feel like a single-page-application, with less delay between page loads and a loading bar for longer requests. To enable SPA mode on a panel, you can use the `spa()` method:
+
+```php
+use Filament\Panel;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->spa();
+}
+```
+
+## Applying middleware
+
+You can apply extra middleware to all routes by passing an array of middleware classes to the `middleware()` method in the configuration:
+
+```php
+use Filament\Panel;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->middleware([
+            // ...
+        ]);
+}
+```
+
+By default, middleware will be run when the page is first loaded, but not on subsequent Livewire AJAX requests. If you want to run middleware on every request, you can make it persistent by passing `true` as the second argument to the `middleware()` method:
+
+```php
+use Filament\Panel;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->tenantMiddleware([
+            // ...
+        ], isPersistent: true);
+}
+```
+
+### Applying middleware to authenticated routes
+
+You can apply middleware to all authenticated routes by passing an array of middleware classes to the `authMiddleware()` method in the configuration:
+
+```php
+use Filament\Panel;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->authMiddleware([
+            // ...
+        ]);
+}
+```
+
+By default, middleware will be run when the page is first loaded, but not on subsequent Livewire AJAX requests. If you want to run middleware on every request, you can make it persistent by passing `true` as the second argument to the `authMiddleware()` method:
+
+```php
+use Filament\Panel;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->authMiddleware([
+            // ...
+        ], isPersistent: true);
 }
 ```

@@ -3,13 +3,17 @@
 namespace Filament\Navigation;
 
 use Closure;
+use Exception;
 use Filament\Support\Components\Component;
+use Illuminate\Contracts\Support\Arrayable;
 
 class NavigationItem extends Component
 {
     protected string | Closure | null $group = null;
 
-    protected ?Closure $isActiveWhen = null;
+    protected string | Closure | null $parentItem = null;
+
+    protected bool | Closure | null $isActive = null;
 
     protected string | Closure | null $icon = null;
 
@@ -34,6 +38,11 @@ class NavigationItem extends Component
 
     protected bool | Closure $isVisible = true;
 
+    /**
+     * @var array<NavigationItem> | Arrayable
+     */
+    protected array | Arrayable $childItems = [];
+
     final public function __construct(string | Closure | null $label = null)
     {
         if (filled($label)) {
@@ -43,7 +52,10 @@ class NavigationItem extends Component
 
     public static function make(string | Closure | null $label = null): static
     {
-        return app(static::class, ['label' => $label]);
+        $static = app(static::class, ['label' => $label]);
+        $static->configure();
+
+        return $static;
     }
 
     /**
@@ -60,6 +72,13 @@ class NavigationItem extends Component
     public function group(string | Closure | null $group): static
     {
         $this->group = $group;
+
+        return $this;
+    }
+
+    public function parentItem(string | Closure | null $group): static
+    {
+        $this->parentItem = $group;
 
         return $this;
     }
@@ -94,7 +113,7 @@ class NavigationItem extends Component
 
     public function isActiveWhen(Closure $callback): static
     {
-        $this->isActiveWhen = $callback;
+        $this->isActive = $callback;
 
         return $this;
     }
@@ -122,7 +141,7 @@ class NavigationItem extends Component
 
     public function url(string | Closure | null $url, bool | Closure $shouldOpenInNewTab = false): static
     {
-        $this->shouldOpenUrlInNewTab = $shouldOpenInNewTab;
+        $this->openUrlInNewTab($shouldOpenInNewTab);
         $this->url = $url;
 
         return $this;
@@ -146,9 +165,20 @@ class NavigationItem extends Component
         return $this->evaluate($this->group);
     }
 
+    public function getParentItem(): ?string
+    {
+        return $this->evaluate($this->parentItem);
+    }
+
     public function getIcon(): ?string
     {
-        return $this->evaluate($this->icon);
+        $icon = $this->evaluate($this->icon);
+
+        if (blank($icon) && $this->getChildItems()) {
+            throw new Exception("Navigation item [{$this->getLabel()}] has child items but no icon. Parent items must have an icon to ensure a proper user experience.");
+        }
+
+        return $icon;
     }
 
     public function isVisible(): bool
@@ -187,17 +217,44 @@ class NavigationItem extends Component
 
     public function isActive(): bool
     {
-        $callback = $this->isActiveWhen;
-
-        if ($callback === null) {
-            return false;
+        if ($this->isActive instanceof Closure) {
+            $this->isActive = ((bool) $this->evaluate($this->isActive));
         }
 
-        return (bool) $this->evaluate($callback);
+        return (bool) $this->isActive;
+    }
+
+    public function isChildItemsActive(): bool
+    {
+        foreach ($this->getChildItems() as $childItem) {
+            if ($childItem->isActive()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function shouldOpenUrlInNewTab(): bool
     {
         return (bool) $this->evaluate($this->shouldOpenUrlInNewTab);
+    }
+
+    /**
+     * @param  array<NavigationItem> | Arrayable  $items
+     */
+    public function childItems(array | Arrayable $items): static
+    {
+        $this->childItems = $items;
+
+        return $this;
+    }
+
+    /**
+     * @return array<NavigationItem> | Arrayable
+     */
+    public function getChildItems(): array | Arrayable
+    {
+        return $this->childItems;
     }
 }

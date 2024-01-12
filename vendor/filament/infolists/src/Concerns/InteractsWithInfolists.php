@@ -2,13 +2,19 @@
 
 namespace Filament\Infolists\Concerns;
 
+use Exception;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\Component;
 use Filament\Infolists\Infolist;
 use Filament\Support\Exceptions\Cancel;
 use Filament\Support\Exceptions\Halt;
+use Filament\Tables\Contracts\HasTable;
+use Illuminate\Validation\ValidationException;
+
 use function Livewire\store;
 
 trait InteractsWithInfolists
@@ -48,6 +54,10 @@ trait InteractsWithInfolists
 
         $infolist = $this->{$name}($this->makeInfolist());
 
+        if (! ($infolist instanceof Infolist)) {
+            return null;
+        }
+
         return $this->cacheInfolist($name, $infolist);
     }
 
@@ -86,7 +96,7 @@ trait InteractsWithInfolists
             return null;
         }
 
-        $action->arguments($arguments);
+        $action->mergeArguments($arguments);
 
         $form = $this->getMountedInfolistActionForm();
 
@@ -111,14 +121,23 @@ trait InteractsWithInfolists
         } catch (Halt $exception) {
             return null;
         } catch (Cancel $exception) {
-        }
+        } catch (ValidationException $exception) {
+            if (! $this->mountedInfolistActionShouldOpenModal()) {
+                $action->resetArguments();
+                $action->resetFormData();
 
-        $action->resetArguments();
-        $action->resetFormData();
+                $this->unmountInfolistAction();
+            }
+
+            throw $exception;
+        }
 
         if (store($this)->has('redirect')) {
             return $result;
         }
+
+        $action->resetArguments();
+        $action->resetFormData();
 
         $this->unmountInfolistAction();
 
@@ -185,9 +204,23 @@ trait InteractsWithInfolists
 
         $this->resetErrorBag();
 
-        $this->dispatch('open-modal', id: "{$this->getId()}-infolist-action");
+        $this->openInfolistActionModal();
 
         return null;
+    }
+
+    protected function openInfolistActionModal(): void
+    {
+        if (
+            ($this instanceof HasActions && count($this->mountedActions)) ||
+            ($this instanceof HasForms && count($this->mountedFormComponentActions)) ||
+            /** @phpstan-ignore-next-line */
+            ($this instanceof HasTable && (count($this->mountedTableActions) || filled($this->mountedTableBulkAction)))
+        ) {
+            throw new Exception('Currently, infolist actions cannot open modals while they are nested within other action modals.');
+        }
+
+        $this->dispatch('open-modal', id: "{$this->getId()}-infolist-action");
     }
 
     public function mountedInfolistActionShouldOpenModal(): bool
@@ -198,9 +231,10 @@ trait InteractsWithInfolists
             return false;
         }
 
-        return $action->getModalDescription() ||
-            $action->getModalContent() ||
-            $action->getModalContentFooter() ||
+        return $action->hasCustomModalHeading() ||
+            $action->hasModalDescription() ||
+            $action->hasModalContent() ||
+            $action->hasModalContentFooter() ||
             $action->getInfolist() ||
             $this->mountedInfolistActionHasForm();
     }
@@ -292,7 +326,7 @@ trait InteractsWithInfolists
 
         $this->resetErrorBag();
 
-        $this->dispatch('open-modal', id: "{$this->getId()}-infolist-action");
+        $this->openInfolistActionModal();
     }
 
     protected function makeInfolist(): Infolist
