@@ -17,7 +17,11 @@ class RefKompetensiGuruResource extends Resource
 {
     protected static ?string $model = RefKompetensiGuru::class;
 
-    protected static ?string $pluralModelLabel = 'Ref Kompetensi Guru';
+    protected static ?string $pluralModelLabel = 'Jenis Kompetensi Guru';
+    protected static ?string $modelLabel = 'Jenis Kompetensi Guru';
+    protected static ?string $navigationLabel = 'Jenis Kompetensi Guru';
+    protected static ?string $navigationGroup = 'Data Referensi Sekolah';
+    protected static ?int $navigationSort = 11;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

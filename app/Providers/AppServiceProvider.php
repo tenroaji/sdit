@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         Filament::registerNavigationGroups([
             'Biodata',
             'Akademik',
+            'Administrasi Kepegawaian',
             'Keuangan Akademik',
             'Keuangan Sekolah',
             'Manajemen Sekolah',
