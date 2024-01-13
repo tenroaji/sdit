@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class AbsensiPegawaiResource extends Resource
 {
@@ -26,42 +27,57 @@ class AbsensiPegawaiResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\DateTimePicker::make('tanggal')
-                    ->required(),
-                Forms\Components\Select::make('id_pegawai')
-                    ->label('Pegawai')
-                    ->relationship('pegawai','nama'),
-                Forms\Components\Toggle::make('status_Kehadiran')
-                    ->label('Kehadiran')
-                    ->default(0),
-                Forms\Components\Select::make('jenis_absen')
-                    ->label('Jenis Absen')
-                    ->default('Tidak ada keterangan')
-                    ->options([
-                        'Sakit' => 'Saklt',
-                        'Izin' => 'Izin',
-                        'Cuti' => 'Cuti',
-                        'Tugas Belajar' => 'Tugas Belajar',
-                        'Tugas Dinas' => 'Tugas Dinas',
-                        'Tidak ada keterangan' => 'Tidak ada keterangan'
-                    ]),    
-                Forms\Components\Textarea::make('alasan_absen')
-                    ->label('Keterangan Ketidakhadiran')
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
-                Forms\Components\Select::make('user_id')
-                    ->disabled()
-                    ->relationship('user','name')
-                    ->default(Auth()->id())
-                    ->label('Diinput Oleh'),
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('asrama.nama')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('kamarasrama.nama')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('tanggal')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                // Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
+            ])
+            ->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+        ->modifyQueryUsing(function (Builder $query) {
+            $user = Auth::user();
+            if (!$user->hasRole('Super Admin')) {
+                $query
+                ->whereHas('pegawai', function ($query) {
+                    $query->where("pegawais.email",Auth::user()->email);
+                });
+
+            }
+        })
             ->columns([
                 Tables\Columns\TextColumn::make('tanggal')
                     ->dateTime()
@@ -73,7 +89,7 @@ class AbsensiPegawaiResource extends Resource
                     ->label('Status Kehadiran')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('jenis_absen')
-                    ->label('Jenis Absen'),    
+                    ->label('Jenis Absen'),
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),

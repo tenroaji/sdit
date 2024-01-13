@@ -18,7 +18,7 @@ class Absensi extends Model
     public function masterabsensi(){
         return $this->belongsTo(MasterAbsensi::class, 'masterabsensi_id');
     }
-    
+
     public function santri(){
         return $this->belongsTo(Santri::class, 'santri_id');
     }
