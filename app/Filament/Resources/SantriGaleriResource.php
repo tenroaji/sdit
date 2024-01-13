@@ -20,6 +20,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 
 class SantriGaleriResource extends Resource
@@ -62,7 +63,16 @@ class SantriGaleriResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-        // ->modifyQueryUsing(fn (Builder $query) => $query->where("kelas_id","1"))
+        ->modifyQueryUsing(function (Builder $query) {
+            $user = Auth::user();
+            if ($user->hasRole('Orang Tua')) {
+                $query
+                ->whereHas('santri', function ($query) {
+                    $query->where("santris.email",Auth::user()->email);
+                });
+
+            }
+        })
             ->columns([
                 Tables\Columns\TextColumn::make('santri.nama')
                     ->numeric()

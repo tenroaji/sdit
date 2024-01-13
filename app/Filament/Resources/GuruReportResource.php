@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms;
 use Pages\ViewUser;
 use Filament\Tables;
@@ -86,6 +87,13 @@ class GuruReportResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+
+            ->modifyQueryUsing(function (Builder $query) {
+                $user = Auth::user();
+                if ($user->hasRole('Guru')) {
+                    $query->where("email",Auth::user()->email);
+                }
+            })
             ->columns([
                 // Tables\Columns\TextColumn::make('nis')
                 //     ->searchable(),
@@ -310,7 +318,7 @@ class GuruReportResource extends Resource
                 ->collapsed()
                 ->schema([
                     RepeatableEntry::make('perangkatAjar')
-                        // ->label('Perangkat Ajar')
+                        ->label('')
                         ->schema([
                             Infolists\Components\TextEntry::make('nama')->label('Bahan Ajar'),
                             Infolists\Components\ViewEntry::make('media')

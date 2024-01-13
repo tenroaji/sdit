@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use Filament\Forms;
+use Illuminate\Support\Facades\Auth;
 use Pages\ViewUser;
 use Filament\Tables;
 use App\Models\Absensi;
@@ -87,6 +88,12 @@ class SantriReportResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->modifyQueryUsing(function (Builder $query) {
+            $user = Auth::user();
+            if ($user->hasRole('Orang Tua')) {
+                $query->where("email",Auth::user()->email);
+            }
+        })
             ->columns([
                 Tables\Columns\TextColumn::make('nis')
                     ->searchable(),
