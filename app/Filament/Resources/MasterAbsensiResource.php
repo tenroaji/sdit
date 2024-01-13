@@ -7,6 +7,7 @@ use App\Filament\Resources\MasterAbsensiResource\RelationManagers;
 use App\Filament\Resources\MasterAbsensiResource\RelationManagers\AbsensisRelationManager;
 use App\Models\MasterAbsensi;
 use Filament\Forms;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -43,6 +44,8 @@ class MasterAbsensiResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required(),
+                TimePicker::make('mulai_jam'),
+                TimePicker::make('hingga_jam'),    
                 Forms\Components\Select::make('guru_id')
                     ->relationship('guru', 'nama')
                     ->searchable()
@@ -69,6 +72,12 @@ class MasterAbsensiResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('jam.nama')
                     ->label('Jam Pelajaran'),
+                    Tables\Columns\TextColumn::make('mulai_jam')
+                    ->time()
+                    ->sortable(),
+                    Tables\Columns\TextColumn::make('hingga_jam')
+                    ->time()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('matapelajaran.nama')
 
                     ->sortable(),

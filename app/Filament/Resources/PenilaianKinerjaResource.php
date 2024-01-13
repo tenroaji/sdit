@@ -18,6 +18,10 @@ class PenilaianKinerjaResource extends Resource
     protected static ?string $model = PenilaianKinerja::class;
 
     protected static ?string $pluralModelLabel = 'Penilaian Kinerja';
+    protected static ?string $modelLabel = 'Penilaian Kinerja';
+    protected static ?string $navigationLabel = 'Penilaian Kinerja';
+    protected static ?string $navigationGroup = 'Administrasi Kepegawaian';
+    protected static ?int $navigationSort = 11;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
