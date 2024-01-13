@@ -32,7 +32,21 @@ class AbsensiPegawaiVerificationResource extends Resource
     {
         return $table
             ->columns([
-                ToggleColumn::make('status_verifikasi'),
+                ToggleColumn::make('status_verifikasi')
+                ->beforeStateUpdated(function ($record, $state) {
+                    // Runs before the state is saved to the database.
+
+                    if ($state === true) {
+                        // Update the 'verifikasi_by' field here
+                        $record->verified_by = auth()->id();
+                    }else {
+                        $record->verified_by = null;
+                    }
+                })
+                ->afterStateUpdated(function ($record, $state) {
+                    // Runs after the state is saved to the database.
+
+                }),
                 Tables\Columns\TextColumn::make('tanggal')
                     ->dateTime()
                     ->sortable(),
@@ -44,7 +58,7 @@ class AbsensiPegawaiVerificationResource extends Resource
                     ->boolean(),
                 Tables\Columns\TextColumn::make('jenis_absen')
                     ->label('Jenis Absen'),
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('verifiedBy.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

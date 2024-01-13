@@ -49,7 +49,21 @@ class MasterAbsensiVerificationResource extends Resource
         return $table
             ->columns([
 
-                ToggleColumn::make('status_verifikasi'),
+                ToggleColumn::make('status_verifikasi')
+                ->beforeStateUpdated(function ($record, $state) {
+                    // Runs before the state is saved to the database.
+
+                    if ($state === true) {
+                        // Update the 'verifikasi_by' field here
+                        $record->verified_by = auth()->id();
+                    }else {
+                        $record->verified_by = null;
+                    }
+                })
+                ->afterStateUpdated(function ($record, $state) {
+                    // Runs after the state is saved to the database.
+
+                }),
                 Tables\Columns\TextColumn::make('tahun'),
                 Tables\Columns\TextColumn::make('tanggal')
                     ->date()
@@ -70,7 +84,7 @@ class MasterAbsensiVerificationResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kelas.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('verifiedBy.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

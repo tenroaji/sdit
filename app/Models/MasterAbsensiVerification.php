@@ -24,7 +24,7 @@ class MasterAbsensiVerification extends Model
     protected $table = 'master_absensis';
 
     protected $fillable = [
-        'tahun','matapelajaran_id','tanggal','guru_id','kelas_id','user_id','jam_id','mulai_jam', 'hingga_jam','verified_by'
+        'status_verifikasi','tahun','matapelajaran_id','tanggal','guru_id','kelas_id','user_id','jam_id','mulai_jam', 'hingga_jam','verified_by'
     ];
     public function matapelajaran(){
         return $this->belongsTo(MataPelajaran::class,'matapelajaran_id');
@@ -44,4 +44,10 @@ class MasterAbsensiVerification extends Model
     public function user(){
         return $this->belongsTo(User::class,'user_id');
     }
+
+    public function verifiedBy(){
+        return $this->belongsTo(User::class,'verified_by');
+    }
 }
+
+

@@ -31,6 +31,10 @@ class AbsensiPegawaiVerification extends Model
         return $this->belongsTo(User::class,'user_id');
     }
 
+    public function verifiedBy(){
+        return $this->belongsTo(User::class,'verified_by');
+    }
+
     public function pegawai(){
         return $this->belongsTo(Pegawai::class,'id_pegawai');
     }
