@@ -33,4 +33,16 @@ class SantriGaleri extends Model
     public function user(){
         return $this->belongsTo(User::class,'user_id');
     }
+
+    public function galeris()
+    {
+        return $this->hasMany(Kelas::class, 'id');
+    }
+
+
+    // public function galeris(){
+    //     return $this->hasMany(Kelas::class,'kelas_id')->whereHas('jenispelanggaran', function ($query) {
+    //         $query->where('jenis_pelanggarans.tipe', "Punishment"); // Ganti dengan nama jenis pelanggaran yang diinginkan
+    //     });
+    // }
 }

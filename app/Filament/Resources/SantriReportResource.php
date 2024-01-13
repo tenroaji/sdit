@@ -96,13 +96,13 @@ class SantriReportResource extends Resource
                 Tables\Columns\TextColumn::make('gender')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('tingkat_id')
+                Tables\Columns\TextColumn::make('tingkat.nama')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('kelas_id')
+                Tables\Columns\TextColumn::make('kelas.nama')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('strata_id')
+                Tables\Columns\TextColumn::make('strata.nama')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('status_aktif')
@@ -225,9 +225,11 @@ class SantriReportResource extends Resource
                                 ->label('Jenis Nilai'),
                                 Infolists\Components\TextEntry::make('masternilai.matapelajaran.nama')
                                 ->label('Mata Pelajaran'),
+                                Infolists\Components\TextEntry::make('masternilai.guru.nama')
+                                ->label('Guru'),
                                 Infolists\Components\TextEntry::make('nilai'),
 
-                            ])->columns(7),
+                            ])->columns(8),
                     ]),
                     Section::make('Kegiatan Kokurikuler dan Extrakurikuler')
                     ->collapsible()
@@ -270,7 +272,7 @@ class SantriReportResource extends Resource
                                 ->label('Catatan Penilaian'),
                                 Infolists\Components\TextEntry::make('guru.nama')
                                 ->label('Guru Pembimbing'),
-                            ])->columns(6),
+                            ])->columns(7),
                     ]),
 
                 Section::make('Kedisiplinan (Reward and Punishment)')

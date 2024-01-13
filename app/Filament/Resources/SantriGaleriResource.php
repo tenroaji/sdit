@@ -5,7 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SantriGaleriResource\Pages;
 use App\Filament\Resources\SantriGaleriResource\RelationManagers;
 use App\Models\SantriGaleri;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\Split;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Forms;
+use Filament\Infolists\Components\Grid;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,6 +20,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class SantriGaleriResource extends Resource
 {
@@ -30,7 +38,8 @@ class SantriGaleriResource extends Resource
                 ->label('Nama Santri')
                 ->searchable(),
                 Forms\Components\FileUpload::make('media')
-                    ,
+                ->disk('public_images')
+                ->preserveFilenames(),
                 Forms\Components\Textarea::make('deskripsi')
                     ->maxLength(65535)
                     ->columnSpanFull(),
@@ -39,32 +48,38 @@ class SantriGaleriResource extends Resource
                     ->preload()
                     ->label('Nama Kelas')
                     ->searchable(),
-                Forms\Components\Select::make('user_id')
-                ->relationship('user','name')
-                ->label('Diinput Oleh')
-                ->default(Auth()->id())
-                ->disabled(),
+                    Forms\Components\Select::make('user_id')
+                    ->relationship('user','name')
+                    ->label('Diinput Oleh')
+                    ->default(Auth()->id())
+                    ->disabled(),
                 Forms\Components\DatePicker::make('tanggal'),
             ]);
     }
 
+
+
     public static function table(Table $table): Table
     {
         return $table
+        // ->modifyQueryUsing(fn (Builder $query) => $query->where("kelas_id","1"))
             ->columns([
                 Tables\Columns\TextColumn::make('santri.nama')
                     ->numeric()
                     ->sortable(),
-            //   ImageColumn::make('media')
-            //     ,
-                // Tables\Columns\TextColumn::make('media')
-                //     ->searchable(),
+              Tables\Columns\ImageColumn::make('media')
+                // ->width(100)
+                ->height(100)
+                ->disk('public_images'),
+
                 Tables\Columns\TextColumn::make('kelas.nama')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user_id')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('tanggal')
                     ->date()
                     ->sortable(),
@@ -81,6 +96,8 @@ class SantriGaleriResource extends Resource
                 //
             ])
             ->actions([
+                // Tables\Actions\ViewAction::make()
+                // ->label('Lihat Galeri'),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -93,6 +110,28 @@ class SantriGaleriResource extends Resource
             ]);
     }
 
+
+    // public static function infolist(Infolist $infolist): Infolist
+    // {
+    //     return $infolist
+    //         ->schema([
+    //             Section::make('Galeri')
+    //                 ->collapsible()
+    //                 ->collapsed()
+    //                 ->schema([
+    //                     RepeatableEntry::make('santri')
+    //                         ->schema([
+    //                             Infolists\Components\ImageEntry::make('media')
+    //                             ->width(100)
+    //                             ->height(150)
+    //                             ->hiddenLabel()
+    //                             ->grow(false)
+    //                             ->disk('public_images'),
+
+    //                         ])->columns(1),
+    //                 ]),
+    //         ]);
+    // }
     public static function getRelations(): array
     {
         return [
@@ -105,6 +144,7 @@ class SantriGaleriResource extends Resource
         return [
             'index' => Pages\ListSantriGaleris::route('/'),
             'create' => Pages\CreateSantriGaleri::route('/create'),
+            'view' => Pages\ViewSantriGaleri::route('/{record}'),
             'edit' => Pages\EditSantriGaleri::route('/{record}/edit'),
         ];
     }

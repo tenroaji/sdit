@@ -13,6 +13,7 @@ use App\Models\ModulTahfiz;
 use App\Models\NilaiSantri;
 use App\Models\Pelanggaran;
 use App\Models\KegiatanSantri;
+use App\Models\PerangkatAjar;
 use App\Models\OrangtuaSantri;
 use App\Models\KelulusanSantri;
 use App\Models\JadwalPulangSantri;
@@ -84,8 +85,24 @@ class GuruReport extends Model
     public function pembayaran(){
         return $this->hasMany(Pembayaran::class,'santri_id');
     }
-    public function pelanggaransantri(){
-        return $this->hasMany(Pelanggaran::class,'santri_id');
+    public function perangkatAjar(){
+        return $this->hasMany(PerangkatAjar::class,'guru_id');
+    }
+
+    // public function perangkatAjar(){
+    //     return $this->hasMany(PerangkatAjar::class,'santri_id')->whereHas('jenispelanggaran', function ($query) {
+    //         $query->where('jenis_pelanggarans.tipe', "Punishment"); // Ganti dengan nama jenis pelanggaran yang diinginkan
+    //     });
+    // }
+
+    /**
+     * Get all of the comments for the GuruReport
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'foreign_key', 'local_key');
     }
 
 }

@@ -278,13 +278,7 @@ class GuruReportResource extends Resource
                     ->schema([
                         Grid::make(2)
                         ->schema([
-                        // RepeatableEntry::make('absensi')
-                        //     ->schema([
-                        //         Infolists\Components\TextEntry::make('masterabsensi_id'),
-                        //         Infolists\Components\TextEntry::make('updated_at'),
-                        //         Infolists\Components\TextEntry::make('status_hadir'),
 
-                        //     ]),
                         Infolists\Components\TextEntry::make('jumlahabsen')
                         ->label('Jumlah Tidak Hadir di Kelas :')
                         ->suffix(' kali absensi jam pelajaran')
@@ -296,17 +290,7 @@ class GuruReportResource extends Resource
 
                             return $jumlahAbsen;
                         }),
-                        // Infolists\Components\TextEntry::make('jumlahabsenasrama')
-                        // ->label('Jumlah Tidak hadir di Asrama :')
-                        // ->suffix(' kali absensi Asrama')
-                        // ->default(function ($record) {
-                        //     // Hitung jumlah ketidak hadiran dari model Absensi
-                        //     $jumlahAbsen = AbsensiAsramaSantri::where('santri_id', $record->id)
-                        //         ->where('status_hadir', 0)
-                        //         ->count();
 
-                        //     return $jumlahAbsen;
-                        // }),
                         Infolists\Components\TextEntry::make('jumlahpelanggaran')
                         ->label('kedisiplinan :')
                         ->suffix(' kali melanggar')
@@ -319,8 +303,21 @@ class GuruReportResource extends Resource
                             return $jumlahAbsen;
                         }),
                     ]),
+                ]),
 
-                    ]),
+                Section::make('Perangkat Ajar')
+                ->collapsible()
+                ->collapsed()
+                ->schema([
+                    RepeatableEntry::make('perangkatAjar')
+                        // ->label('Perangkat Ajar')
+                        ->schema([
+                            Infolists\Components\TextEntry::make('nama')->label('Bahan Ajar'),
+                            Infolists\Components\ViewEntry::make('media')
+                            ->label('Berkas')
+                            ->view('tables.columns.open-file'),
+                        ])->columns(2)->columnSpanFull(),
+                ]),
 
 
 
