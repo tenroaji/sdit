@@ -17,8 +17,11 @@ use Filament\Tables\Columns\ToggleColumn;
 class MasterAbsensiVerificationResource extends Resource
 {
     protected static ?string $model = MasterAbsensiVerification::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $modelLabel = 'Verifikasi Absensi Belajar Mengajar';
+    protected static ?string $navigationLabel = 'Verifikasi Absensi Belajar Mengajar';
+    protected static ?string $navigationGroup = 'Administrasi Kepegawaian';
+    protected static ?int $navigationSort = 12;
 
     public static function form(Form $form): Form
     {

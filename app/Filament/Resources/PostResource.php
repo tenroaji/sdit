@@ -50,8 +50,9 @@ class PostResource extends Resource
                 Forms\Components\Select::make('user_id')
                     ->relationship('user','name')
                     ->label('Diinput Oleh')
-                    ->disabled()
-                    ->default(Auth()->id()),
+                    // ->disabled()
+                    // ->default(Auth()->id())
+                    ,
             ]);
     }
 

@@ -19,6 +19,10 @@ class AbsensiPegawaiVerificationResource extends Resource
     protected static ?string $model = AbsensiPegawaiVerification::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $modelLabel = 'Verifikasi Absensi Pegawai';
+    protected static ?string $navigationLabel = 'Verifikasi Absensi Pegawai';
+    protected static ?string $navigationGroup = 'Administrasi Kepegawaian';
+    protected static ?int $navigationSort = 13;
 
     public static function form(Form $form): Form
     {

@@ -28,6 +28,7 @@ class SantriGaleriResource extends Resource
     protected static ?string $model = SantriGaleri::class;
     protected static ?string $pluralModelLabel = 'Galeri Santri';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

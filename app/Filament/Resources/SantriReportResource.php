@@ -41,6 +41,7 @@ class SantriReportResource extends Resource
     protected static ?string $modelLabel = 'Ikhwal Santri';
     protected static ?string $pluralModelLabel = 'Ikhwal Santri';
     protected static ?string $navigationLabel = 'Ikhwal Santri';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {

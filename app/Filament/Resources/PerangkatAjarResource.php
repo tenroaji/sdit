@@ -18,6 +18,10 @@ class PerangkatAjarResource extends Resource
     protected static ?string $model = PerangkatAjar::class;
 
     protected static ?string $pluralModelLabel = 'Perangkat Ajar';
+    protected static ?string $modelLabel = 'Perangkat Ajar';
+    protected static ?string $navigationLabel = 'Perangkat Ajar';
+    protected static ?string $navigationGroup = 'Administrasi Kepegawaian';
+    protected static ?int $navigationSort = 14;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
