@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class NilaiSantri extends Model
 {
     use HasFactory;
-    protected $fillable = ['masternilai_id', 'santri_id' ,'jenisnilai_id', 'nilai', 'user_id'];
+    protected $fillable = ['masternilai_id','capaian_nilai', 'santri_id' ,'jenisnilai_id', 'nilai', 'user_id'];
 
     public function masternilai(){
         return $this->belongsTo(MasterNilai::class,'masternilai_id');

@@ -15,7 +15,7 @@ class MasterAbsensi extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'tahun','matapelajaran_id','tanggal','guru_id','kelas_id','user_id','jam_id','mulai_jam', 'hingga_jam'
+        'tahun','matapelajaran_id','tema','subtema','tanggal','guru_id','kelas_id','user_id','jam_id','mulai_jam', 'hingga_jam'
     ];
     public function matapelajaran(){
         return $this->belongsTo(MataPelajaran::class,'matapelajaran_id');

@@ -43,6 +43,8 @@ class MasterNilaiResource extends Resource
                 ->preload()
                 ->searchable()
                 ->label('Mata Pelajaran'),
+                Forms\Components\TextInput::make('capaian_pembelajaran')
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('tahun')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('semester')
@@ -68,6 +70,9 @@ class MasterNilaiResource extends Resource
                 ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('matapelajaran.nama')
+                ->searchable()
+                    ->sortable(),
+                    Tables\Columns\TextColumn::make('capaian_pembelajaran')
                 ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tahun')

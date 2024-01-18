@@ -39,6 +39,8 @@ class MasterAbsensiResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required(),
+                    Forms\Components\TextInput::make('tema'),
+                    Forms\Components\TextInput::make('subtema'),    
                 Forms\Components\Select::make('jam_id')
                     ->relationship('jam', 'nama')
                     ->searchable()
@@ -70,6 +72,10 @@ class MasterAbsensiResource extends Resource
                     ->date()
                     
                     ->sortable(),
+                    Tables\Columns\TextColumn::make('tema')
+                    ->searchable(),
+                    Tables\Columns\TextColumn::make('subtema')
+                    ->searchable(),   
                 Tables\Columns\TextColumn::make('jam.nama')
                     ->label('Jam Pelajaran'),
                     Tables\Columns\TextColumn::make('mulai_jam')

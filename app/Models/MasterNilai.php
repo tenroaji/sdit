@@ -13,7 +13,7 @@ class MasterNilai extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'kelas_id','tahun','semester','matapelajaran_id','user_id','guru_id','jenisnilai_id'
+        'kelas_id','tahun','semester','capaian_pembelajaran','matapelajaran_id','user_id','guru_id','jenisnilai_id'
     ];
 
     public function user(){
