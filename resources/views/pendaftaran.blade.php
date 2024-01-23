@@ -51,7 +51,7 @@
                             <a class="nav-link" href="{{ route('pendaftaran') }}">Pendaftaran Calon Santri</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="https://perumdautama.com/admin">Login</a>
+                            <a class="nav-link" href="{{url('admin')}}">Login</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link btn bg-success rounded-pill text-white" href="#cta">Hubungi Kami</a>
