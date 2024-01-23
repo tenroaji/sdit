@@ -17,7 +17,7 @@ class SantriGaleri extends Model
         'nama',
         'media',
         'deskripsi',
-        'tingkat_id',
+        'kelas_id',
         'user_id',
         'tanggal',
     ];

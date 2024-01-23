@@ -38,9 +38,9 @@ class SantriReportResource extends Resource
     protected static ?string $model = SantriReport::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $modelLabel = 'Ikhwal Santri';
-    protected static ?string $pluralModelLabel = 'Ikhwal Santri';
-    protected static ?string $navigationLabel = 'Ikhwal Santri';
+    protected static ?string $modelLabel = 'Ihwal Santri';
+    protected static ?string $pluralModelLabel = 'Ihwal Santri';
+    protected static ?string $navigationLabel = 'Ihwal Santri';
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -134,7 +134,7 @@ class SantriReportResource extends Resource
             ->actions([
                 // Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make()
-                ->label('Lihat Ikhwal Santri'),
+                ->label('Lihat Ihwal Santri'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -301,21 +301,6 @@ class SantriReportResource extends Resource
 
                             return $jumlahAbsen;
                         }),
-
-
-
-                        // Infolists\Components\TextEntry::make('jumlahpelanggaran')
-                        // ->label('kedisiplinan :')
-                        // ->suffix(' kali melanggar')
-                        // ->default(function ($record) {
-                        //     // Hitung jumlah ketidak hadiran dari model Absensi
-                        //     $jumlahAbsen = Pelanggaran::where('santri_id', $record->id)
-                        //         // ->where('status_hadir', 0)
-                        //         ->count();
-
-                        //     return $jumlahAbsen;
-                        // }),
-
 
 
                         RepeatableEntry::make('rewardsantri')
