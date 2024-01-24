@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('user_id')->nullable();
             $table->boolean('verification')->nullable();
             $table->integer('poin')->nullable();
+            $table->date('tanggal')->nullable();
             $table->timestamps();
         });
     }
