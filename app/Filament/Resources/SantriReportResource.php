@@ -32,6 +32,8 @@ use App\Filament\Resources\SantriReportResource\RelationManagers;
 use App\Models\AbsensiAsrama;
 use App\Models\AbsensiAsramaSantri;
 use App\Models\Pelanggaran;
+use App\Models\SantriGaleri;
+use Njxqlus\Filament\Components\Infolists\LightboxImageEntry;
 
 class SantriReportResource extends Resource
 {
@@ -147,8 +149,100 @@ class SantriReportResource extends Resource
     }
     public static function infolist(Infolist $infolist): Infolist
     {
+    //    // Assuming you have a $santriReport instance
+        $santriReport = SantriReport::first();
+
+    //     // Get the grouped galeris
+        $groupedGaleris = $santriReport->group_galeris()->get();
+
+        $tabs =[];
+        // $tabs = ['all' => Infolists\Components\Tabs\Tab::make('All')->badge($santriReport::withCount('kelas'))];
+        // $tiers = SantriReport::withCount('galeris')
+        //     ->get();
+
+        foreach ($groupedGaleris as $tier) {
+            $name = $tier->nama;
+            $slug = str($name)->slug()->toString();
+
+            $media = SantriGaleri::where('santri_id', $infolist->record->id)
+            ->where('kelas_id', $tier->kelas_id)->get();
+
+            $images = [];
+            foreach($media as $data){
+                // $images[] = Infolists\Components\ImageEntry::make('media')
+                // ->width(100)
+                // ->height(150)
+                // ->hiddenLabel()
+                // ->grow(false)
+                // ->default(function ($record) use ($data) {
+                //     return $data->media;
+                // })
+
+                // ->disk('public_images');
+
+                // $images[] = Infolists\Components\ViewEntry::make('data')
+                // ->default(function ($record) use ($data) {
+                //     return $data->media;
+                // })
+                // ->view('tables.columns.image-preview');
+                $url = url('images').'/'.$data->media;
+                $images[]= LightboxImageEntry::make('nama')
+                ->hiddenLabel()
+                ->image($url)
+                ->slideGallery($name)
+                ->circular()
+                ->href($url);
+
+            }
+
+
+            $tabs[$slug] =Infolists\Components\Tabs\Tab::make("Kelas ".$name)
+                // ->badge($tier->kelas_count)
+                ->schema([
+                    Grid::make([
+                        'default' => 1,
+                        'sm' => 2,
+                        'md' => 3,
+                        'lg' => 4,
+                        'xl' => 6,
+                        '2xl' => 8,
+                    ])
+                    ->schema($images)
+                ]);
+        }
+        $dynamicTabs =  Infolists\Components\Tabs::make('Dynamic Tabs')->tabs($tabs);
+
         return $infolist
             ->schema([
+                Section::make('Galeri')
+                ->collapsible()
+                // ->collapsed()
+                ->schema([
+                    $dynamicTabs
+                ]),
+
+
+
+                Section::make('Kegiatan Kokurikuler dan Extrakurikuler')
+                ->collapsible()
+                ->collapsed()
+                ->schema([
+                    RepeatableEntry::make('kegiatan')
+                        ->schema([
+                            Infolists\Components\TextEntry::make('kegiatan.tanggal_mulai')
+                            ->date()
+                            ->label('Tanggal Mulai'),
+                            Infolists\Components\TextEntry::make('kegiatan.tanggal_selesai')
+                            ->date()
+                            ->label('Tanggal Selesai'),
+                            Infolists\Components\TextEntry::make('kegiatan.jeniskegiatan.nama')
+                            ->label('Jenis Kegiatan'),
+                            Infolists\Components\TextEntry::make('kegiatan.nama_kegiatan')
+                            ->label('Kegiatan'),
+                            Infolists\Components\TextEntry::make('peranan'),
+                            Infolists\Components\TextEntry::make('catatan'),
+                        ])->columns(6),
+                ]),
 
                 Section::make()
                     ->schema([
@@ -185,6 +279,7 @@ class SantriReportResource extends Resource
                                 ->hiddenLabel()
                                 ->grow(false)
                                 ->disk('public_images'),
+
                         ])->from('lg'),
 
                     ]),

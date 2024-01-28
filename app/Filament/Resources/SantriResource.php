@@ -54,7 +54,8 @@ class SantriResource extends Resource
         return $form
             ->schema([
 
-                TextInput::make('nis'),
+                TextInput::make('nis')
+                ->label('NISN'),
                 TextInput::make('nama'),
                     // ->live()
                     // ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
@@ -106,6 +107,7 @@ class SantriResource extends Resource
          ->queryStringIdentifier('users')
             ->columns([
                 TextColumn::make('nis')
+                ->label('NISN')
                 ->searchable() ->sortable(),
                 TextColumn::make('nama')
                 ->searchable() ->sortable(),

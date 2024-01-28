@@ -189,7 +189,7 @@ class GuruReportResource extends Resource
                         ])->from('lg'),
 
                     ]),
-   
+
                     Section::make('Ikhwal Kehadiran Guru')
                     ->collapsible()
                     ->collapsed()

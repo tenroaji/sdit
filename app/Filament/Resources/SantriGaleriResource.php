@@ -76,12 +76,17 @@ class SantriGaleriResource extends Resource
         })
             ->columns([
                 Tables\Columns\TextColumn::make('santri.nama')
+                    ->searchable()
                     ->numeric()
                     ->sortable(),
               Tables\Columns\ImageColumn::make('media')
                 // ->width(100)
                 ->height(100)
                 ->disk('public_images'),
+                Tables\Columns\ImageColumn::make('media')
+                    ->simpleLightbox()
+                    ->height(100)
+                    ->disk('public_images'),
 
                 Tables\Columns\TextColumn::make('kelas.nama')
                     ->numeric()
@@ -121,28 +126,6 @@ class SantriGaleriResource extends Resource
             ]);
     }
 
-
-    // public static function infolist(Infolist $infolist): Infolist
-    // {
-    //     return $infolist
-    //         ->schema([
-    //             Section::make('Galeri')
-    //                 ->collapsible()
-    //                 ->collapsed()
-    //                 ->schema([
-    //                     RepeatableEntry::make('santri')
-    //                         ->schema([
-    //                             Infolists\Components\ImageEntry::make('media')
-    //                             ->width(100)
-    //                             ->height(150)
-    //                             ->hiddenLabel()
-    //                             ->grow(false)
-    //                             ->disk('public_images'),
-
-    //                         ])->columns(1),
-    //                 ]),
-    //         ]);
-    // }
     public static function getRelations(): array
     {
         return [

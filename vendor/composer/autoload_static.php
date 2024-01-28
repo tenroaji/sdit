@@ -21,20 +21,20 @@ class ComposerStaticInitc3667ea56f2a151ba0c00d2e40d7dc4d
         '2c620c99f96a2b964346b45a4d1d1e64' => __DIR__ . '/..' . '/spatie/invade/src/functions.php',
         'e125f489d647ae664b0af7b573079de7' => __DIR__ . '/..' . '/filament/support/src/helpers.php',
         '9e4824c5afbdc1482b6025ce3d4dfde8' => __DIR__ . '/..' . '/league/csv/src/functions_include.php',
-        '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
-        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '9261e07cd92c53dcc971c7c88c176c04' => __DIR__ . '/..' . '/danharrin/date-format-converter/src/helpers.php',
         '9720327d09ed9a4ba00c9b5071b71c7d' => __DIR__ . '/..' . '/danharrin/date-format-converter/src/standards.php',
+        '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         '2ad94ea6f6f6013119e9abcf4e302a08' => __DIR__ . '/..' . '/filament/forms/src/helpers.php',
+        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         'b69d5f1f95cd1ed438c038b6cbcc45b5' => __DIR__ . '/..' . '/filament/notifications/src/Testing/Autoload.php',
+        '89e9938b64b06cc502d7ceca69a380fe' => __DIR__ . '/..' . '/filament/filament/src/global_helpers.php',
+        'ebb446bb6d02e998480945fbbb73dc64' => __DIR__ . '/..' . '/filament/filament/src/helpers.php',
         '3bd81c9b8fcc150b69d8b63b4d2ccf23' => __DIR__ . '/..' . '/spatie/flare-client-php/src/helpers.php',
         '35a6ad97d21e794e7e22a17d806652e4' => __DIR__ . '/..' . '/nunomaduro/termwind/src/Functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
         'eee56a36884c3af04e64bac85043e771' => __DIR__ . '/..' . '/akaunting/laravel-money/src/helpers.php',
-        '89e9938b64b06cc502d7ceca69a380fe' => __DIR__ . '/..' . '/filament/filament/src/global_helpers.php',
-        'ebb446bb6d02e998480945fbbb73dc64' => __DIR__ . '/..' . '/filament/filament/src/helpers.php',
         '47e1160838b5e5a10346ac4084b58c23' => __DIR__ . '/..' . '/laravel/prompts/src/helpers.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
@@ -109,6 +109,8 @@ class ComposerStaticInitc3667ea56f2a151ba0c00d2e40d7dc4d
             'Spatie\\FlareClient\\' => 19,
             'Spatie\\Color\\' => 13,
             'Spatie\\Backtrace\\' => 17,
+            'SolutionForest\\FilamentSimpleLightBox\\Database\\Factories\\' => 57,
+            'SolutionForest\\FilamentSimpleLightBox\\' => 38,
             'Sabberworm\\CSS\\' => 15,
         ),
         'R' => 
@@ -135,6 +137,7 @@ class ComposerStaticInitc3667ea56f2a151ba0c00d2e40d7dc4d
         'N' => 
         array (
             'NunoMaduro\\Collision\\' => 21,
+            'Njxqlus\\Filament\\Components\\' => 28,
         ),
         'M' => 
         array (
@@ -410,6 +413,14 @@ class ComposerStaticInitc3667ea56f2a151ba0c00d2e40d7dc4d
         array (
             0 => __DIR__ . '/..' . '/spatie/backtrace/src',
         ),
+        'SolutionForest\\FilamentSimpleLightBox\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/solution-forest/filament-simplelightbox/database/factories',
+        ),
+        'SolutionForest\\FilamentSimpleLightBox\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/solution-forest/filament-simplelightbox/src',
+        ),
         'Sabberworm\\CSS\\' => 
         array (
             0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
@@ -478,6 +489,10 @@ class ComposerStaticInitc3667ea56f2a151ba0c00d2e40d7dc4d
         'NunoMaduro\\Collision\\' => 
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
+        ),
+        'Njxqlus\\Filament\\Components\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/njxqlus/filament-lightbox/src',
         ),
         'Monolog\\' => 
         array (
@@ -811,6 +826,10 @@ class ComposerStaticInitc3667ea56f2a151ba0c00d2e40d7dc4d
         'App\\Filament\\Resources\\FasilitasResource\\Pages\\CreateFasilitas' => __DIR__ . '/../..' . '/app/Filament/Resources/FasilitasResource/Pages/CreateFasilitas.php',
         'App\\Filament\\Resources\\FasilitasResource\\Pages\\EditFasilitas' => __DIR__ . '/../..' . '/app/Filament/Resources/FasilitasResource/Pages/EditFasilitas.php',
         'App\\Filament\\Resources\\FasilitasResource\\Pages\\ListFasilitas' => __DIR__ . '/../..' . '/app/Filament/Resources/FasilitasResource/Pages/ListFasilitas.php',
+        'App\\Filament\\Resources\\GaleriResource' => __DIR__ . '/../..' . '/app/Filament/Resources/GaleriResource.php',
+        'App\\Filament\\Resources\\GaleriResource\\Pages\\CreateGaleri' => __DIR__ . '/../..' . '/app/Filament/Resources/GaleriResource/Pages/CreateGaleri.php',
+        'App\\Filament\\Resources\\GaleriResource\\Pages\\EditGaleri' => __DIR__ . '/../..' . '/app/Filament/Resources/GaleriResource/Pages/EditGaleri.php',
+        'App\\Filament\\Resources\\GaleriResource\\Pages\\ListGaleris' => __DIR__ . '/../..' . '/app/Filament/Resources/GaleriResource/Pages/ListGaleris.php',
         'App\\Filament\\Resources\\GuruReportResource' => __DIR__ . '/../..' . '/app/Filament/Resources/GuruReportResource.php',
         'App\\Filament\\Resources\\GuruReportResource\\Pages\\CreateGuruReport' => __DIR__ . '/../..' . '/app/Filament/Resources/GuruReportResource/Pages/CreateGuruReport.php',
         'App\\Filament\\Resources\\GuruReportResource\\Pages\\EditGuruReport' => __DIR__ . '/../..' . '/app/Filament/Resources/GuruReportResource/Pages/EditGuruReport.php',
@@ -1047,6 +1066,7 @@ class ComposerStaticInitc3667ea56f2a151ba0c00d2e40d7dc4d
         'App\\Models\\AsramaSantri' => __DIR__ . '/../..' . '/app/Models/AsramaSantri.php',
         'App\\Models\\DaftarSurah' => __DIR__ . '/../..' . '/app/Models/DaftarSurah.php',
         'App\\Models\\Fasilitas' => __DIR__ . '/../..' . '/app/Models/Fasilitas.php',
+        'App\\Models\\Galeri' => __DIR__ . '/../..' . '/app/Models/Galeri.php',
         'App\\Models\\Guru' => __DIR__ . '/../..' . '/app/Models/Guru.php',
         'App\\Models\\GuruMataPelajaran' => __DIR__ . '/../..' . '/app/Models/GuruMataPelajaran.php',
         'App\\Models\\GuruReport' => __DIR__ . '/../..' . '/app/Models/GuruReport.php',
@@ -1125,6 +1145,7 @@ class ComposerStaticInitc3667ea56f2a151ba0c00d2e40d7dc4d
         'App\\Policies\\AsramaSantriPolicy' => __DIR__ . '/../..' . '/app/Policies/AsramaSantriPolicy.php',
         'App\\Policies\\DaftarSurahPolicy' => __DIR__ . '/../..' . '/app/Policies/DaftarSurahPolicy.php',
         'App\\Policies\\FasilitasPolicy' => __DIR__ . '/../..' . '/app/Policies/FasilitasPolicy.php',
+        'App\\Policies\\GaleriPolicy' => __DIR__ . '/../..' . '/app/Policies/GaleriPolicy.php',
         'App\\Policies\\GuruMataPelajaranPolicy' => __DIR__ . '/../..' . '/app/Policies/GuruMataPelajaranPolicy.php',
         'App\\Policies\\GuruPolicy' => __DIR__ . '/../..' . '/app/Policies/GuruPolicy.php',
         'App\\Policies\\GuruReportPolicy' => __DIR__ . '/../..' . '/app/Policies/GuruReportPolicy.php',
@@ -5751,6 +5772,13 @@ class ComposerStaticInitc3667ea56f2a151ba0c00d2e40d7dc4d
         'Nette\\Utils\\Type' => __DIR__ . '/..' . '/nette/utils/src/Utils/Type.php',
         'Nette\\Utils\\UnknownImageFileException' => __DIR__ . '/..' . '/nette/utils/src/Utils/exceptions.php',
         'Nette\\Utils\\Validators' => __DIR__ . '/..' . '/nette/utils/src/Utils/Validators.php',
+        'Njxqlus\\Filament\\Components\\FilamentLightboxServiceProvider' => __DIR__ . '/..' . '/njxqlus/filament-lightbox/src/FilamentLightboxServiceProvider.php',
+        'Njxqlus\\Filament\\Components\\GLightBox' => __DIR__ . '/..' . '/njxqlus/filament-lightbox/src/GLightBox.php',
+        'Njxqlus\\Filament\\Components\\HasGLightBox' => __DIR__ . '/..' . '/njxqlus/filament-lightbox/src/HasGLightBox.php',
+        'Njxqlus\\Filament\\Components\\Infolists\\Lightbox' => __DIR__ . '/..' . '/njxqlus/filament-lightbox/src/Infolists/Lightbox.php',
+        'Njxqlus\\Filament\\Components\\Infolists\\LightboxComponentContainer' => __DIR__ . '/..' . '/njxqlus/filament-lightbox/src/Infolists/LightboxComponentContainer.php',
+        'Njxqlus\\Filament\\Components\\Infolists\\LightboxImageEntry' => __DIR__ . '/..' . '/njxqlus/filament-lightbox/src/Infolists/LightboxImageEntry.php',
+        'Njxqlus\\Filament\\Components\\Infolists\\LightboxSpatieMediaLibraryImageEntry' => __DIR__ . '/..' . '/njxqlus/filament-lightbox/src/Infolists/LightboxSpatieMediaLibraryImageEntry.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Laravel/CollisionServiceProvider.php',
         'NunoMaduro\\Collision\\Adapters\\Laravel\\Commands\\TestCommand' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Laravel/Commands/TestCommand.php',
@@ -7804,6 +7832,11 @@ class ComposerStaticInitc3667ea56f2a151ba0c00d2e40d7dc4d
         'SebastianBergmann\\Type\\UnknownType' => __DIR__ . '/..' . '/sebastian/type/src/type/UnknownType.php',
         'SebastianBergmann\\Type\\VoidType' => __DIR__ . '/..' . '/sebastian/type/src/type/VoidType.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'SolutionForest\\FilamentSimpleLightBox\\Facades\\FilamentSimpleLightBox' => __DIR__ . '/..' . '/solution-forest/filament-simplelightbox/src/Facades/FilamentSimpleLightBox.php',
+        'SolutionForest\\FilamentSimpleLightBox\\FilamentSimpleLightBox' => __DIR__ . '/..' . '/solution-forest/filament-simplelightbox/src/FilamentSimpleLightBox.php',
+        'SolutionForest\\FilamentSimpleLightBox\\FilamentSimpleLightBoxServiceProvider' => __DIR__ . '/..' . '/solution-forest/filament-simplelightbox/src/FilamentSimpleLightBoxServiceProvider.php',
+        'SolutionForest\\FilamentSimpleLightBox\\SimpleLightBoxPlugin' => __DIR__ . '/..' . '/solution-forest/filament-simplelightbox/src/SimpleLightBoxPlugin.php',
+        'SolutionForest\\FilamentSimpleLightBox\\Testing\\TestsFilamentSimpleLightBox' => __DIR__ . '/..' . '/solution-forest/filament-simplelightbox/src/Testing/TestsFilamentSimpleLightBox.php',
         'Spatie\\Backtrace\\Arguments\\ArgumentReducers' => __DIR__ . '/..' . '/spatie/backtrace/src/Arguments/ArgumentReducers.php',
         'Spatie\\Backtrace\\Arguments\\ProvidedArgument' => __DIR__ . '/..' . '/spatie/backtrace/src/Arguments/ProvidedArgument.php',
         'Spatie\\Backtrace\\Arguments\\ReduceArgumentPayloadAction' => __DIR__ . '/..' . '/spatie/backtrace/src/Arguments/ReduceArgumentPayloadAction.php',

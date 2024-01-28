@@ -29,6 +29,18 @@ class SantriReport extends Model
     use HasFactory;
     protected $table = 'santris';
 
+    public function galeris(){
+        return $this->hasMany(SantriGaleri::class, 'santri_id','id');
+    }
+
+    public function group_galeris(){
+        return $this->hasMany(SantriGaleri::class, 'santri_id', 'id','media')
+                    ->join('kelas', 'santri_galeris.kelas_id', '=', 'kelas.id') // Adjust the table names as per your database schema
+                    ->select('santri_galeris.kelas_id', 'kelas.nama') // Include the necessary fields
+                    ->withCount('kelas')
+                    ->groupBy('santri_galeris.kelas_id', 'kelas.nama'); // Group by both fields
+    }
+
     public function kota(){
         return $this->belongsTo(Kota::class,'kota_id');
     }

@@ -87,7 +87,7 @@
 
 
         <!-- Footer 3 - Bootstrap Brain Component -->
-        @include('template.footer')
+       @include('template.footer')
 
         <!-- Bootstrap JS and Popper.js (Optional) -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>

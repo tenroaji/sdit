@@ -67,12 +67,12 @@ class GaleriResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('santri.nama')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
-              Tables\Columns\ImageColumn::make('media')
-                // ->width(100)
+                Tables\Columns\ImageColumn::make('media')
+                ->simpleLightbox()
                 ->height(100)
                 ->disk('public_images'),
-
                 Tables\Columns\TextColumn::make('user_id')
                     ->numeric()
                     ->sortable()

@@ -29,31 +29,40 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/berita', function () {
-   
+
         $latestPosts = (new Post())->getLatestPosts();
         $staticInfo = (new StaticInfo())->getStaticInfo();
         // dd(compact('latestPosts', 'staticInfo'));
-    
+
         return view('berita', compact('latestPosts', 'staticInfo'));
     })->name('berita');
 
+Route::get('/galeri', function () {
+
+    $latestPosts = (new Post())->getLatestPosts();
+    $staticInfo = (new StaticInfo())->getStaticInfo();
+    // dd(compact('latestPosts', 'staticInfo'));
+
+    return view('galeri', compact('latestPosts', 'staticInfo'));
+})->name('galeri');
+
     Route::get('/pesantren', function () {
-   
+
         $latestPosts = (new Post())->getLatestPosts();
         $staticInfo = (new StaticInfo())->getStaticInfo();
         // dd(compact('latestPosts', 'staticInfo'));
-    
+
         return view('kampus', compact('latestPosts', 'staticInfo'));
     })->name('pesantren');
-    
+
     // Route::get('/pendaftaran', function () {
-   
+
     //     $latestPosts = (new Post())->getLatestPosts();
     //     $staticInfo = (new StaticInfo())->getStaticInfo();
     //     // dd(compact('latestPosts', 'staticInfo'));
-    
+
     //     return view('pendaftaran', compact('latestPosts', 'staticInfo'));
-    // })->name('pendaftaran');   
+    // })->name('pendaftaran');
     // bagian dibawah ini sebagai gantinya
     Route::get('/pendaftaran', [PendaftaranSantriController::class, 'showForm'])->name('pendaftaran');
 
