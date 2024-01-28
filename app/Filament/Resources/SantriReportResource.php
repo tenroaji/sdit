@@ -169,17 +169,6 @@ class SantriReportResource extends Resource
 
             $images = [];
             foreach($media as $data){
-                // $images[] = Infolists\Components\ImageEntry::make('media')
-                // ->width(100)
-                // ->height(150)
-                // ->hiddenLabel()
-                // ->grow(false)
-                // ->default(function ($record) use ($data) {
-                //     return $data->media;
-                // })
-
-                // ->disk('public_images');
-
                 // $images[] = Infolists\Components\ViewEntry::make('data')
                 // ->default(function ($record) use ($data) {
                 //     return $data->media;
@@ -214,15 +203,6 @@ class SantriReportResource extends Resource
 
         return $infolist
             ->schema([
-                Section::make('Galeri')
-                ->collapsible()
-                // ->collapsed()
-                ->schema([
-                    $dynamicTabs
-                ]),
-
-
-
                 Section::make('Kegiatan Kokurikuler dan Extrakurikuler')
                 ->collapsible()
                 ->collapsed()
@@ -414,7 +394,13 @@ class SantriReportResource extends Resource
 
                     ]),
 
-                    ]),
+                ]),
+                Section::make('Galeri')
+                ->collapsible()
+                ->collapsed()
+                ->schema([
+                    $dynamicTabs
+                ]),
 
 
 
