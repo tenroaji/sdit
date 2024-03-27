@@ -37,10 +37,10 @@ use App\Filament\Resources\GuruReportResource\RelationManagers;
 class GuruReportResource extends Resource
 {
     protected static ?string $model = GuruReport::class;
-    protected static ?string $pluralModelLabel = 'Ikhwal Guru';
+    protected static ?string $pluralModelLabel = 'Ihwal Guru';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $modelLabel = 'Ikhwal Guru';
-    protected static ?string $navigationLabel = 'Ikhwal Guru';
+    protected static ?string $modelLabel = 'Ihwal Guru';
+    protected static ?string $navigationLabel = 'Ihwal Guru';
     protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
@@ -109,9 +109,11 @@ class GuruReportResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kelas_id')
+                    ->searchable()
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('strata_id')
+                    ->searchable()
                     ->numeric()
                     ->sortable(),
                 // Tables\Columns\IconColumn::make('status_aktif')
@@ -135,7 +137,7 @@ class GuruReportResource extends Resource
             ->actions([
                 // Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make()
-                ->label('Lihat Ikhwal Guru'),
+                ->label('Lihat Ihwal Guru'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -190,7 +192,7 @@ class GuruReportResource extends Resource
 
                     ]),
 
-                    Section::make('Ikhwal Kehadiran Guru')
+                    Section::make('Ihwal Kehadiran Guru')
                     ->collapsible()
                     ->collapsed()
                     ->schema([

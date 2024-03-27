@@ -111,11 +111,14 @@ class SantriReportResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kelas.nama')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('strata.nama')
+                    ->searchable()
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('status_aktif')
+                    ->searchable()
                     ->boolean(),
 
                 Tables\Columns\TextColumn::make('tahun')

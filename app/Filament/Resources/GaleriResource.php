@@ -26,7 +26,11 @@ class GaleriResource extends Resource
 {
     protected static ?string $model = Galeri::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $pluralModelLabel = 'Input Galeri';
+    protected static ?string $navigationIcon = 'heroicon-s-megaphone';
+    protected static ?string $modelLabel = 'Input Galeri';
+    protected static ?string $navigationLabel = 'Input Galeri';
+    protected static ?string $navigationGroup = 'Jurnalistik';
 
     public static function form(Form $form): Form
     {
@@ -41,13 +45,24 @@ class GaleriResource extends Resource
                 ->disk('public_images')
                 ->preserveFilenames(),
                 Forms\Components\Textarea::make('deskripsi')
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
-                    Forms\Components\Select::make('user_id')
-                    ->relationship('user','name')
-                    ->label('Diinput Oleh')
-                    ->default(Auth()->id())
-                    ->disabled(),
+                ->maxLength(65535)
+                ->columnSpanFull(),
+                Forms\Components\Toggle::make('verification')
+                 ->visible(function () {
+                    return auth()->user()->hasRole('Super Admin') ||  auth()->user()->hasRole('Admin');
+                })
+                ->label('Verifikasi'),
+                Forms\Components\TextInput::make('poin')
+                ->numeric()
+                    ->inputMode('decimal')
+                ->visible(function () {
+                    return auth()->user()->hasRole('Super Admin') ||  auth()->user()->hasRole('Admin');
+                }),
+                Forms\Components\Select::make('user_id')
+                ->relationship('user','name')
+                ->label('Diinput Oleh')
+                ->default(Auth()->id())
+                ->disabled(),
                 Forms\Components\DatePicker::make('tanggal'),
             ]);
     }
@@ -65,10 +80,14 @@ class GaleriResource extends Resource
             }
         })
             ->columns([
-                Tables\Columns\TextColumn::make('santri.nama')
-                    ->numeric()
-                    ->searchable()
-                    ->sortable(),
+                // Tables\Columns\TextColumn::make('santri.nama')
+                //     ->numeric()
+                //     ->searchable()
+                //     ->sortable(),
+                Tables\Columns\ToggleColumn::make('verification')
+                ->visible(function () {
+                    return auth()->user()->hasRole('Super Admin') ||  auth()->user()->hasRole('Admin');
+                }),
                 Tables\Columns\ImageColumn::make('media')
                 ->simpleLightbox()
                 ->height(100)

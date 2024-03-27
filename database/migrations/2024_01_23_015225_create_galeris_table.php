@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('galeris', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('santri_id');
+            $table->foreignId('santri_id')->nullable();
             $table->string('media')->nullable();
             $table->text('deskripsi')->nullable();
             $table->bigInteger('user_id')->nullable();

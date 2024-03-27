@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Post;
+use App\Models\Galeri;
 use App\Models\StaticInfo;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KartuPelajarController;
@@ -39,12 +40,12 @@ Route::get('/berita', function () {
 
 Route::get('/galeri', function () {
 
-    $latestPosts = (new Post())->getLatestPosts();
+    $latestGaleri = (new Galeri())->getLatestGaleri();
     $staticInfo = (new StaticInfo())->getStaticInfo();
     // dd(compact('latestPosts', 'staticInfo'));
 
-    return view('galeri', compact('latestPosts', 'staticInfo'));
-})->name('galeri');
+    return view('galeri', compact('latestGaleri', 'staticInfo'));
+    })->name('galeri');
 
     Route::get('/pesantren', function () {
 

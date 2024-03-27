@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Filament\Facades\Filament;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::useBootstrap();
         Filament::registerNavigationGroups([
             'Biodata',
             'Akademik',
@@ -33,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
             'Laporan',
             'Data Referensi Akademik',
             'Data Referensi Sekolah',
-            
+
         ]);
     }
 }

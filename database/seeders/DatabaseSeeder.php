@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             // 'is_admin'=>1,
             'email'=>'superadmin@ibssys.com',
             'email_verified_at' =>now(),
-            'password'=>Hash::make('rais141177130572'),
+            'password'=>Hash::make('1234'),
             'remember_token'=>Str::random(10),
         ]);
     //    Santri::factory(20)->create();

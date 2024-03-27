@@ -28,4 +28,9 @@ class Galeri extends Model
         return $this->belongsTo(User::class,'user_id');
     }
 
+    public function getLatestGaleri($limit = 12)
+    {
+        return $this->where('verification',true)->orderBy('created_at', 'desc')->paginate($limit);
+    }
+
 }

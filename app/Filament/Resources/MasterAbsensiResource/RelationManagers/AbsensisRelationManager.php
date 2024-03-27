@@ -22,7 +22,7 @@ class AbsensisRelationManager extends RelationManager
                 Forms\Components\Select::make('santri_id')
                     ->relationship('santri','nama'),
                     Forms\Components\Toggle::make('status_hadir'),
-                    Forms\Components\TextInput::make('user_id')    
+                    Forms\Components\TextInput::make('user_id')
             ]);
     }
 
@@ -32,8 +32,8 @@ class AbsensisRelationManager extends RelationManager
             ->recordTitleAttribute('masterabsensi_id')
             ->columns([
                 Tables\Columns\ToggleColumn::make('status_hadir'),
-                Tables\Columns\TextColumn::make('santri.nis'),
                 Tables\Columns\TextColumn::make('santri.nama'),
+                Tables\Columns\TextColumn::make('santri.nis')->label('NISN'),
                 Tables\Columns\TextColumn::make('user.name'),
             ])
             ->filters([
