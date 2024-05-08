@@ -121,7 +121,6 @@ class GuruReportResource extends Resource
 
                 Tables\Columns\TextColumn::make('mata_pelajaran')
                     ->searchable(),
-
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -140,10 +139,11 @@ class GuruReportResource extends Resource
                 ->label('Lihat Ihwal Guru'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ])
+
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
             ]);
@@ -154,65 +154,98 @@ class GuruReportResource extends Resource
             ->schema([
 
                 Section::make()
-                    ->schema([
-                        Split::make([
-                            Grid::make(2)
-                                ->schema([
-
-                                    Group::make([
-                                        Infolists\Components\TextEntry::make('nis')
-                                            // ->markdown()
-                                            ->inlineLabel()
-                                            ->label('NIS :')
-                                            ->prose(),
-                                        Infolists\Components\TextEntry::make('nama')
-                                            ->label('Nama :')
-                                            ->inlineLabel()
-                                            ->weight(FontWeight::Bold),
-                                    ]),
-                                    Group::make([
-                                        Infolists\Components\TextEntry::make('tingkat.nama')
-                                            ->label('Kelas :')
-                                            ->inlineLabel(),
-                                        Infolists\Components\TextEntry::make('kelas.nama')
-                                            ->label('Ruang Kelas :')
-                                            ->inlineLabel(),
-                                        Infolists\Components\TextEntry::make('strata.nama')
-                                            ->label('Jenjang :')
-                                            ->inlineLabel(),
-                                    ]),
-                                ]),
-                            Infolists\Components\ImageEntry::make('foto')
-                                ->width(100)
-                                ->height(150)
-                                ->hiddenLabel()
-                                ->grow(false)
-                                ->disk('public_images'),
-                        ])->from('lg'),
-
-                    ]),
-
-                    Section::make('Ihwal Kehadiran Guru')
-                    ->collapsible()
-                    ->collapsed()
-                    ->schema([
-                        RepeatableEntry::make('absensi')
+                ->schema([
+                    Split::make([
+                        Grid::make(2)
                             ->schema([
-                                // Infolists\Components\TextEntry::make('id')
-                                // ->date()
-                                // ->label('Tanggal Mulai'),
-                                Infolists\Components\TextEntry::make('tanggal')
-                                ->date(),
-                                Infolists\Components\TextEntry::make('mulai_jam')
-                                ->time(),
-                                Infolists\Components\TextEntry::make('hingga_jam')
-                                ->time(),
-                                Infolists\Components\TextEntry::make('matapelajaran.nama'),
-                                Infolists\Components\TextEntry::make('kelas.nama'),
-                                Infolists\Components\TextEntry::make('Jumlah Jam')
-                                ->default('3 Jam 0 Menit'),
-                            ])->columns(6)->columnSpanFull(),
-                    ]),
+
+                                Group::make([
+                                    Infolists\Components\TextEntry::make('nis')
+                                        // ->markdown()
+                                        ->inlineLabel()
+                                        ->label('NIS :')
+                                        ->prose(),
+                                    Infolists\Components\TextEntry::make('nama')
+                                        ->label('Nama :')
+                                        ->inlineLabel()
+                                        ->weight(FontWeight::Bold),
+                                ]),
+                                Group::make([
+                                    Infolists\Components\TextEntry::make('tingkat.nama')
+                                        ->label('Kelas :')
+                                        ->inlineLabel(),
+                                    Infolists\Components\TextEntry::make('kelas.nama')
+                                        ->label('Ruang Kelas :')
+                                        ->inlineLabel(),
+                                    Infolists\Components\TextEntry::make('strata.nama')
+                                        ->label('Jenjang :')
+                                        ->inlineLabel(),
+                                ]),
+                            ]),
+                        Infolists\Components\ImageEntry::make('foto')
+                            ->width(100)
+                            ->height(150)
+                            ->hiddenLabel()
+                            ->grow(false)
+                            ->disk('public_images'),
+                    ])->from('lg'),
+
+                ]),
+
+                Section::make('Ihwal Kehadiran Guru')
+                ->collapsible()
+                ->collapsed()
+                ->schema([
+                RepeatableEntry::make('absensi')
+                    ->schema([
+                        // Infolists\Components\TextEntry::make('id')
+                        // ->date()
+                        // ->label('Tanggal Mulai'),
+                        Infolists\Components\TextEntry::make('tanggal')
+                        ->date(),
+                        Infolists\Components\TextEntry::make('mulai_jam')
+                        ->time(),
+                        Infolists\Components\TextEntry::make('hingga_jam')
+                        ->time(),
+                        Infolists\Components\TextEntry::make('matapelajaran.nama'),
+                        Infolists\Components\TextEntry::make('kelas.nama'),
+                        Infolists\Components\TextEntry::make('Jumlah Jam')
+
+                        ->default(function ($record) {
+                            $mulai_jam = Carbon::parse($record->mulai_jam);
+                            $hingga_jam = Carbon::parse($record->hingga_jam);
+
+                            // Calculate the difference in hours
+                            $diff_hours = $hingga_jam->diffInHours($mulai_jam);
+                            $diff_minutes = $hingga_jam->diffInMinutes($mulai_jam) % 60;
+
+                            return sprintf('%d Jam %02d Menit', $diff_hours, $diff_minutes);
+                        })
+                    ])->columns(6)->columnSpanFull(),
+                    Infolists\Components\TextEntry::make('Total Jam Absensi')
+            ->default(function ($record) {
+                $total_hours = 0;
+                $total_minutes = 0;
+
+                foreach ($record->absensi as $entry) {
+                    $start_time = Carbon::parse($entry['mulai_jam']);
+                    $end_time = Carbon::parse($entry['hingga_jam']);
+
+                    $diff_hours = $end_time->diffInHours($start_time);
+                    $diff_minutes = $end_time->diffInMinutes($start_time) % 60;
+
+                    $total_hours += $diff_hours;
+                    $total_minutes += $diff_minutes;
+                }
+
+                $total_hours += floor($total_minutes / 60);
+                $total_minutes = $total_minutes % 60;
+                $total_mp =  ($total_hours*2) +($total_minutes/30) ;
+
+
+                return sprintf('%d Jam %02d Menit -> %d Jam Pelajaran', $total_hours, $total_minutes,$total_mp);
+            }),
+                ]),
 
 
                 Section::make('Perangkat Ajar')

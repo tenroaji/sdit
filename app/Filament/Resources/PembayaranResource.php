@@ -106,14 +106,14 @@ class PembayaranResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -121,5 +121,5 @@ class PembayaranResource extends Resource
             'create' => Pages\CreatePembayaran::route('/create'),
             'edit' => Pages\EditPembayaran::route('/{record}/edit'),
         ];
-    }    
+    }
 }

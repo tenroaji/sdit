@@ -84,7 +84,7 @@ class CalonsRelationManager extends RelationManager
                 TextColumn::make('gender'),
                 TextColumn::make('email'),
                 TextColumn::make('no_telpon')
-                
+
                 ->searchable() ->sortable(),
             ])
             ->filters([

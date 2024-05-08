@@ -31,7 +31,7 @@ class PenyusunanJadwalUjianResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('tahun')
                     ->required()
-                    ->maxLength(4),
+                    ->maxLength(9),
                 Forms\Components\TextInput::make('semester')
                     ->required()
                     ->numeric(),
@@ -94,14 +94,14 @@ class PenyusunanJadwalUjianResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
            JadwalujiansRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -109,5 +109,5 @@ class PenyusunanJadwalUjianResource extends Resource
             'create' => Pages\CreatePenyusunanJadwalUjian::route('/create'),
             'edit' => Pages\EditPenyusunanJadwalUjian::route('/{record}/edit'),
         ];
-    }    
+    }
 }

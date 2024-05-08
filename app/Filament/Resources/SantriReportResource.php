@@ -142,9 +142,9 @@ class SantriReportResource extends Resource
                 ->label('Lihat Ihwal Santri'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
@@ -152,11 +152,10 @@ class SantriReportResource extends Resource
     }
     public static function infolist(Infolist $infolist): Infolist
     {
-    //    // Assuming you have a $santriReport instance
-        $santriReport = SantriReport::first();
 
-    //     // Get the grouped galeris
-        $groupedGaleris = $santriReport->group_galeris()->get();
+        $groupedGaleris = SantriGaleri::select('*')
+        ->join('kelas', 'santri_galeris.kelas_id', '=', 'kelas.id')
+        ->where('santri_id', $infolist->record->id)->get();
 
         $tabs =[];
         // $tabs = ['all' => Infolists\Components\Tabs\Tab::make('All')->badge($santriReport::withCount('kelas'))];
@@ -206,27 +205,6 @@ class SantriReportResource extends Resource
 
         return $infolist
             ->schema([
-                Section::make('Kegiatan Kokurikuler dan Extrakurikuler')
-                ->collapsible()
-                ->collapsed()
-                ->schema([
-                    RepeatableEntry::make('kegiatan')
-                        ->schema([
-                            Infolists\Components\TextEntry::make('kegiatan.tanggal_mulai')
-                            ->date()
-                            ->label('Tanggal Mulai'),
-                            Infolists\Components\TextEntry::make('kegiatan.tanggal_selesai')
-                            ->date()
-                            ->label('Tanggal Selesai'),
-                            Infolists\Components\TextEntry::make('kegiatan.jeniskegiatan.nama')
-                            ->label('Jenis Kegiatan'),
-                            Infolists\Components\TextEntry::make('kegiatan.nama_kegiatan')
-                            ->label('Kegiatan'),
-                            Infolists\Components\TextEntry::make('peranan'),
-                            Infolists\Components\TextEntry::make('catatan'),
-                        ])->columns(6),
-                ]),
-
                 Section::make()
                     ->schema([
                         Split::make([
@@ -267,6 +245,7 @@ class SantriReportResource extends Resource
 
                     ]),
                     Section::make('Dana Wakaf Bulanan (DWB)')
+                    ->visible(fn () => !auth()->user()->hasRole('Guru'))
                     ->collapsible()
                     ->collapsed()
                     ->schema([

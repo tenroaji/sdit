@@ -29,14 +29,14 @@ class SantrisRelationManager extends RelationManager
                     ->relationship('stratalama','nama')
                     ->preload()
                     ->searchable()
-                    ->label('Jenjang Lama'),  
+                    ->label('Jenjang Lama'),
                 Forms\Components\Select::make('strata_baru')
                     ->relationship('stratabaru','nama')
                     ->preload()
                     ->searchable()
                     ->label('Jenjang Baru'),
                 Forms\Components\TextInput::make('predikat'),
-                Forms\Components\Select::make('user_id')              
+                Forms\Components\Select::make('user_id')
                 ->relationship('user','name')
                 ->default(Auth()->id())
                 ->disabled()
@@ -53,7 +53,7 @@ class SantrisRelationManager extends RelationManager
                 Tables\Columns\TextInputColumn::make('predikat'),
                 Tables\Columns\TextColumn::make('stratalama.nama'),
                 Tables\Columns\TextColumn::make('stratabaru.nama'),
-                
+
             ])
             ->filters([
                 //
@@ -80,14 +80,14 @@ class SantrisRelationManager extends RelationManager
                             if ($santri->tingkat_id > 12) {
                                 $santri->status_aktif = 0;
                             }
-                        
+
 
                             // Save the Santri model
                             $santri->save();
                         }
                     }),
                 Tables\Actions\EditAction::make(),
-                
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

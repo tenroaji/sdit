@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\MasterNilaiResource\Pages;
 use App\Filament\Resources\MasterNilaiResource\RelationManagers;
 use App\Filament\Resources\MasterNilaiResource\RelationManagers\NilaisantriRelationManager;
+use App\Models\Kelas;
 use App\Models\MasterNilai;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,7 +14,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use Filament\Tables\Filters\SelectFilter;
 class MasterNilaiResource extends Resource
 {
     protected static ?string $model = MasterNilai::class;
@@ -56,9 +57,9 @@ class MasterNilaiResource extends Resource
                 ->label('Guru'),
                 Forms\Components\Select::make('user_id')
                     ->default(Auth()->id())
+                    ->disabled()
                     ->relationship('user','name')
-                    ->label('Diinput Oleh')
-                    ->disabled(),
+                    ->label('Diinput Oleh'),
             ]);
     }
 
@@ -96,7 +97,11 @@ class MasterNilaiResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('kelas_id')
+                    ->label('Nama Kelas')
+                    ->options(function () {
+                        return Kelas::pluck('nama','id')->toArray();
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -110,14 +115,14 @@ class MasterNilaiResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             NilaisantriRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -125,5 +130,5 @@ class MasterNilaiResource extends Resource
             'create' => Pages\CreateMasterNilai::route('/create'),
             'edit' => Pages\EditMasterNilai::route('/{record}/edit'),
         ];
-    }    
+    }
 }

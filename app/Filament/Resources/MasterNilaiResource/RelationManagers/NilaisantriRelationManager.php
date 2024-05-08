@@ -20,22 +20,27 @@ class NilaisantriRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('santri_id')
-                    ->relationship('santri','nama')
+                ->relationship(
+                    name: 'santri',
+                    titleAttribute: 'nama',
+                    modifyQueryUsing: fn (Builder $query) => $query->where('kelas_id', $this->getOwnerRecord()->kelas_id),
+                )
+
                     ->preload()
                     ->searchable()
                     ->label('Santri'),
-                    // Forms\Components\Select::make('jenisnilai_id')
-                    // ->relationship('jenisnilai','nama')
-                    // ->preload()
-                    // ->searchable()
-                    // ->label('Jenis Nilai'),  
-                    Forms\Components\TextInput::make('nilai')
+                // Forms\Components\Select::make('jenisnilai_id')
+                // ->relationship('jenisnilai','nama')
+                // ->preload()
+                // ->searchable()
+                // ->label('Jenis Nilai'),
+                Forms\Components\TextInput::make('nilai')
                     ->numeric(),
-                    Forms\Components\Select::make('user_id')
+                Forms\Components\Select::make('user_id')
+                    ->disabled()
                     ->relationship('user','name')
                     ->default(Auth()->id())
-                    ->disabled()
-                    ->label('Diinput Oleh'),    
+                    ->label('Diinput Oleh'),
             ]);
     }
 

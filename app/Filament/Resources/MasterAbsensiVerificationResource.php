@@ -81,11 +81,12 @@ class MasterAbsensiVerificationResource extends Resource
                     ->time()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('matapelajaran.nama')
-
                     ->sortable(),
                 Tables\Columns\TextColumn::make('guru.nama')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kelas.nama')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('verifiedBy.name')
                     ->sortable(),

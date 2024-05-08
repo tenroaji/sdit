@@ -24,7 +24,7 @@ class ModulTahfizResource extends Resource
     protected static ?string $navigationGroup = 'Kegiatan Sekolah';
     protected static ?int $navigationSort = 1;
 
-    
+
 
     public static function form(Form $form): Form
     {
@@ -59,10 +59,10 @@ class ModulTahfizResource extends Resource
                     ->preload()
                     ->searchable(),
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user','name')
-                    ->label('Diinput Oleh')
+                    ->relationship('user', 'name')
+                    ->label('Diinput oleh')
                     ->default(Auth()->id())
-                    ->disabled(),
+                    ->disableOptionWhen(fn (string $value): bool => true),
             ]);
     }
 
@@ -123,14 +123,14 @@ class ModulTahfizResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -138,5 +138,5 @@ class ModulTahfizResource extends Resource
             'create' => Pages\CreateModulTahfiz::route('/create'),
             'edit' => Pages\EditModulTahfiz::route('/{record}/edit'),
         ];
-    }    
+    }
 }

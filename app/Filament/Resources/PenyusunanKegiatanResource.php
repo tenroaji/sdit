@@ -91,14 +91,14 @@ class PenyusunanKegiatanResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             SantrisRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -106,5 +106,5 @@ class PenyusunanKegiatanResource extends Resource
             'create' => Pages\CreatePenyusunanKegiatan::route('/create'),
             'edit' => Pages\EditPenyusunanKegiatan::route('/{record}/edit'),
         ];
-    }    
+    }
 }

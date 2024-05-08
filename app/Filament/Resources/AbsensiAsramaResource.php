@@ -46,9 +46,9 @@ class AbsensiAsramaResource extends Resource
                 Forms\Components\TextInput::make('tahun')
                     ->label('Tahun Masuk Asrama')
                     ->required()
-                    ->maxWidth(4),
+                    ->maxWidth(9),
                 Forms\Components\Select::make('user_id')
-                ->disabled()
+                ->readonly()
                 ->label('Diinput Oleh')
                 ->relationship('user','name')
                 ->default(Auth()->id()),

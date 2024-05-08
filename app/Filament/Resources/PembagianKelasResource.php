@@ -30,7 +30,7 @@ class PembagianKelasResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('tahun')
                     ->required()
-                    ->maxLength(4),
+                    ->maxLength(9),
                 Forms\Components\Select::make('tingkat_id')
                     ->label('Kelas ')
                     ->searchable()
@@ -42,9 +42,9 @@ class PembagianKelasResource extends Resource
                     ->preload()
                     ->relationship('kelas','nama'),
                     Forms\Components\Select::make('user_id')
+                        ->disabled()
                         ->relationship('user','name')
                         ->label('Diinput oleh')
-                        ->disabled()
                         ->default(Auth()->id()),
                 Forms\Components\Textarea::make('deskripsi')
                     ->label('Catatan')
@@ -90,14 +90,14 @@ class PembagianKelasResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             SantrisRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -105,5 +105,5 @@ class PembagianKelasResource extends Resource
             'create' => Pages\CreatePembagianKelas::route('/create'),
             'edit' => Pages\EditPembagianKelas::route('/{record}/edit'),
         ];
-    }    
+    }
 }

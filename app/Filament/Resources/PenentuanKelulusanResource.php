@@ -71,7 +71,7 @@ class PenentuanKelulusanResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-               
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -85,14 +85,14 @@ class PenentuanKelulusanResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             SantrisRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -100,5 +100,5 @@ class PenentuanKelulusanResource extends Resource
             'create' => Pages\CreatePenentuanKelulusan::route('/create'),
             'edit' => Pages\EditPenentuanKelulusan::route('/{record}/edit'),
         ];
-    }    
+    }
 }

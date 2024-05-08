@@ -31,7 +31,7 @@ class PenyusunanRosterResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('tahun')
                     ->label('Tahun Ajaran')
-                    ->maxLength(4),
+                    ->maxLength(9),
                 Forms\Components\TextInput::make('semester')
                     ->numeric()
                     ->label('Semester'),
@@ -82,14 +82,14 @@ class PenyusunanRosterResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
            RostersRelationManager::class
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -97,5 +97,5 @@ class PenyusunanRosterResource extends Resource
             'create' => Pages\CreatePenyusunanRoster::route('/create'),
             'edit' => Pages\EditPenyusunanRoster::route('/{record}/edit'),
         ];
-    }    
+    }
 }

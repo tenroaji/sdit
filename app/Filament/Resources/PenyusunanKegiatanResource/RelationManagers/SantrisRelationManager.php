@@ -24,13 +24,13 @@ class SantrisRelationManager extends RelationManager
                     ->preload()
                     ->searchable()
                     ->label('Santri'),
-                    Forms\Components\TextInput::make('peranan'), 
+                    Forms\Components\TextInput::make('peranan'),
                     Forms\Components\TextInput::make('catatan'),
                     Forms\Components\Select::make('user_id')
                     ->relationship('user','name')
                     ->default(Auth()->id())
                     ->disabled()
-                    ->label('Diinput Oleh')   
+                    ->label('Diinput Oleh')
             ]);
     }
 

@@ -31,7 +31,7 @@ class JabatanRelationManager extends RelationManager
                     ->disabled()
                     ->label('Diinput Oleh')
                     ->relationship('user','name')
-                    ->default(Auth()->id()),   
+                    ->default(Auth()->id()),
             ]);
     }
 

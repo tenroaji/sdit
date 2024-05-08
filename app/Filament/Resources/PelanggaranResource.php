@@ -44,9 +44,9 @@ class PelanggaranResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('user_id')
                     ->label('Diinput Oleh')
+                    ->disabled()
                     ->relationship('user','name')
-                    ->default(Auth()->id())
-                    ->disabled(),
+                    ->default(Auth()->id()),
             ]);
     }
 

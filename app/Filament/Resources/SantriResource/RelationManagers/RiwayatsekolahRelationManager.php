@@ -38,8 +38,9 @@ class RiwayatsekolahRelationManager extends RelationManager
                 Forms\Components\Select::make('user_id')
                 ->default(Auth()->id())
                 ->label('Diinput Oleh')
+                ->disabled()
                 ->relationship('user','name')
-                ->disabled(),
+                ,
 
             ]);
     }

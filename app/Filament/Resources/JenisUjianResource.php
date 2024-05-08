@@ -74,14 +74,14 @@ class JenisUjianResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -89,5 +89,5 @@ class JenisUjianResource extends Resource
             'create' => Pages\CreateJenisUjian::route('/create'),
             'edit' => Pages\EditJenisUjian::route('/{record}/edit'),
         ];
-    }    
+    }
 }

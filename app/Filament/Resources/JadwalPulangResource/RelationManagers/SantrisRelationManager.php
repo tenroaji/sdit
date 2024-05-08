@@ -27,7 +27,7 @@ class SantrisRelationManager extends RelationManager
                     ->disabled()
                     ->relationship('user','name')
                     ->default(Auth()->id())
-                    ->label('Diinput Oleh'),    
+                    ->label('Diinput Oleh'),
             ]);
     }
 

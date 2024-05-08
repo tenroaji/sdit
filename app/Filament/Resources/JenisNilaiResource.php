@@ -36,8 +36,8 @@ class JenisNilaiResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\Select::make('user_id')
                     ->default(Auth()->id())
-                    ->relationship('user','name')
                     ->disabled()
+                    ->relationship('user','name')
                     ->label('Diinput Oleh'),
             ]);
     }
@@ -75,14 +75,14 @@ class JenisNilaiResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -90,5 +90,5 @@ class JenisNilaiResource extends Resource
             'create' => Pages\CreateJenisNilai::route('/create'),
             'edit' => Pages\EditJenisNilai::route('/{record}/edit'),
         ];
-    }    
+    }
 }

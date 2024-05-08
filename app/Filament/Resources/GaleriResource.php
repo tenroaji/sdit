@@ -59,10 +59,10 @@ class GaleriResource extends Resource
                     return auth()->user()->hasRole('Super Admin') ||  auth()->user()->hasRole('Admin');
                 }),
                 Forms\Components\Select::make('user_id')
+                ->disabled()
                 ->relationship('user','name')
                 ->label('Diinput Oleh')
-                ->default(Auth()->id())
-                ->disabled(),
+                ->default(Auth()->id()),
                 Forms\Components\DatePicker::make('tanggal'),
             ]);
     }
