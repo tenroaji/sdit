@@ -12,7 +12,7 @@ class Absensi extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'masterabsensi_id', 'santri_id', 'status_hadir', 'user_id'
+        'masterabsensi_id', 'santri_id', 'status_hadir', 'user_id','status'
     ];
 
     public function masterabsensi(){

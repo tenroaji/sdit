@@ -7,10 +7,6 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\Relationship;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-
 class AbsensisRelationManager extends RelationManager
 {
     protected static string $relationship = 'absensis';
@@ -31,10 +27,25 @@ class AbsensisRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('masterabsensi_id')
             ->columns([
-                Tables\Columns\ToggleColumn::make('status_hadir'),
+                Tables\Columns\ToggleColumn::make('status_hadir')
+                    ->afterStateUpdated(function ($record, $state) {
+                        $record->status = $state ? 'HADIR' : 'ALPA';
+                        $record->save();
+                    }),
+                Tables\Columns\SelectColumn::make('status')
+                    ->label('Keterangan')
+                    ->default('ALPA')
+                    ->options([
+                        'HADIR' => 'HADIR',
+                        'ALPA' => 'ALPA',
+                        'SAKIT' => 'SAKIT',
+                        'IZIN' => 'IZIN',
+                    ])
+                    ->selectablePlaceholder(false),
                 Tables\Columns\TextColumn::make('santri.nama'),
+
                 Tables\Columns\TextColumn::make('santri.nis')->label('NISN'),
-                Tables\Columns\TextColumn::make('user.name'),
+//                Tables\Columns\TextColumn::make('user.name'),
             ])
             ->filters([
                 //
